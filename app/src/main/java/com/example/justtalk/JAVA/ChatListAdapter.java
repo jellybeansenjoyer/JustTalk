@@ -1,4 +1,4 @@
-package com.example.justtalk;
+package com.example.justtalk.JAVA;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.justtalk.JAVA.models.User;
-import com.example.justtalk.Kotlin.ChatClickCallback;
+import com.example.justtalk.R;
 import com.example.justtalk.databinding.ModelChatBinding;
 
 import org.jetbrains.annotations.NotNull;
