@@ -4,19 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.layout.Layout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentChatBinding
-import kotlinx.coroutines.NonDisposableHandle.parent
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-class BlankFragment : Fragment() {
+class BlankFragment : Fragment(),ChatClickCallback {
 
     lateinit private var mBinding:FragmentChatBinding
-
+    lateinit private var auth:FirebaseAuth
+    lateinit private var referenceUser: DatabaseReference
+    lateinit private var user: User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        auth = Firebase.auth
+        referenceUser = Firebase.database.reference.child("Users")
 
     }
 
@@ -32,7 +40,13 @@ class BlankFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+           val userFriends = user.friendrefs;
 
     }
 
+    override fun onClick(userId:String, view: View) {
+        val bundle = Bundle()
+        bundle.putString("abc123",userId)
+        (activity as MainActivity).makeTransactions(Fragment::class,bundle)
+    }
 }
