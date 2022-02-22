@@ -6,6 +6,7 @@ public class Chat {
     private String id;
     private String sender;
     private String reciever;
+    private List<Message> messageList;
 
     public String getId() {
         return id;
@@ -46,5 +47,4 @@ public class Chat {
         this.messageList = messageList;
     }
 
-    private List<Message> messageList;
 }
