@@ -1,4 +1,4 @@
-package com.example.justtalk.Kotlin
+package com.example.justtalk.Kotlin.UI
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,30 +12,26 @@ import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentTalkBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
-class TalkFragment : Fragment() {
+class TalkFragment(private var user:User) : Fragment() {
     lateinit private var messageRoomId:String
     lateinit private var messageRoom: Chat
     lateinit private var mBinding:FragmentTalkBinding
-    lateinit private var mAuth:FirebaseAuth
     lateinit private var mReference:DatabaseReference
-    lateinit private var user:User
     lateinit private var friend:User
     lateinit private var messageThread:List<Message>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             messageRoomId = it.getString("abc123")!!
         }
-        mAuth = Firebase.auth
         mReference = Firebase.database.reference.child("MessageRoom")
-
     }
 
     override fun onCreateView(

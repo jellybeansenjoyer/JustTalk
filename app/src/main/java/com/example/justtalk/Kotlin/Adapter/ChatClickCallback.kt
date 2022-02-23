@@ -1,8 +1,8 @@
-package com.example.justtalk.Kotlin
+package com.example.justtalk.Kotlin.Adapter
 
 import android.view.View
 import com.example.justtalk.Kotlin.models.User
 
 interface ChatClickCallback {
-    fun onClick(userId: String,view: View)
+    fun onClick(user:User,view: View)
 }

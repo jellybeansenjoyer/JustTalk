@@ -1,4 +1,4 @@
-package com.example.justtalk.JAVA
+package com.example.justtalk.Kotlin.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.justtalk.Kotlin.models.Message
 import com.example.justtalk.R
-import com.example.justtalk.databinding.FragmentTalkBinding
 import com.example.justtalk.databinding.ModelMessageBinding
 
 class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageViewHolder>() {
@@ -22,7 +21,7 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
         }
         companion object{
             @JvmStatic
-            fun getInstance(parent:ViewGroup):MessageViewHolder{
+            fun getInstance(parent:ViewGroup): MessageViewHolder {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.model_chat,parent,false)
                 return MessageViewHolder(view)
             }

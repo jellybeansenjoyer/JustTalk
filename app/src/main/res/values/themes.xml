@@ -16,4 +16,8 @@
     <style name="JustTalk.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="fontFamily">@font/lobster</item>
     </style>
+    <style name="JustTalk.Toolbar.Title2" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/roboto</item>
+    </style>
+
 </resources>

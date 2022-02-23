@@ -1,4 +1,4 @@
-package com.example.justtalk.JAVA;
+package com.example.justtalk.JAVA.UI;
 
 import android.os.Bundle;
 

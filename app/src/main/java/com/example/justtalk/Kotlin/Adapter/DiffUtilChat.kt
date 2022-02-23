@@ -1,4 +1,4 @@
-package com.example.justtalk.Kotlin
+package com.example.justtalk.Kotlin.Adapter
 
 import androidx.recyclerview.widget.DiffUtil
 

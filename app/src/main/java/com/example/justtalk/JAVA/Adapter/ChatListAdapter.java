@@ -1,4 +1,4 @@
-package com.example.justtalk.JAVA;
+package com.example.justtalk.JAVA.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +48,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         }
         public void bind(String id){
             mBinding.nameUser.setText(id);
-            User user;
+//            User user;
+            User user = null;
             Glide.with(mParent.getContext()).load(user).into(mBinding.dpUser);
             mBinding.nameUser.setText(user.getName());
 
@@ -58,6 +59,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
             return new ChatViewHolder(view,parent);
         }
     }
+
     public void submitList(List<String> newList){
         DiffUtil.Callback cb = new DiffUtil.Callback() {
             @Override
@@ -84,4 +86,5 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         oldList = newList;
         calc.dispatchUpdatesTo(this);
     }
+
 }

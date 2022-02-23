@@ -1,4 +1,4 @@
-package com.example.justtalk.Kotlin
+package com.example.justtalk.Kotlin.UI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
