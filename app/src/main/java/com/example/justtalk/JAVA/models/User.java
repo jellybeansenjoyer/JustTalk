@@ -1,8 +1,9 @@
 package com.example.justtalk.JAVA.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class User {
+public class User{
 
     private String id;
     private String name;

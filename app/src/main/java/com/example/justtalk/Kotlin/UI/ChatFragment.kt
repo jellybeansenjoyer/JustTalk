@@ -19,35 +19,18 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class BlankFragment : Fragment(), ChatClickCallback {
+class ChatFragment(private var user:User) : Fragment(), ChatClickCallback {
 
     lateinit private var mBinding:FragmentChatBinding
     lateinit private var mAuth:FirebaseAuth
     lateinit private var referenceUser: DatabaseReference
-    lateinit private var user: User
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAuth = Firebase.auth
         referenceUser = Firebase.database.reference.child("Users")
-        user = getUserReference()!!
     }
 
-    fun getUserReference():User?{
-        var user:User?=null
-        val userId = mAuth.currentUser!!.uid
-        referenceUser.orderByChild("id").equalTo(userId).addValueEventListener(object:ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach {
-                    val result = it.getValue(User::class.java)
-                    user=result
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-        return user
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,7 +50,6 @@ class BlankFragment : Fragment(), ChatClickCallback {
                     this.adapter =adapter
                     this.layoutManager = LinearLayoutManager(requireContext())
                 }
-
     }
 
     override fun onClick(user:User, view: View) {

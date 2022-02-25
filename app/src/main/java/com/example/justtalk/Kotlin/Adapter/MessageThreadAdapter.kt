@@ -17,7 +17,6 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
         fun bind(message:Message){
             if(message.type.equals("text"))
             mBinding.message.setText(message.content as String)
-
         }
         companion object{
             @JvmStatic
@@ -52,6 +51,8 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
             }
 
         }
+        val calc = DiffUtil.calculateDiff(diffUtilCb)
         oldList = newList
+        calc.dispatchUpdatesTo(this)
     }
 }
