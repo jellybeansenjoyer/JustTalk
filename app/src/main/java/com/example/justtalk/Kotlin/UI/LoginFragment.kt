@@ -5,14 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import com.example.justtalk.R
+import com.example.justtalk.databinding.FragmentLoginBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class LoginFragment : Fragment() {
-
+    lateinit private var mBinding:FragmentLoginBinding
+    lateinit private var mAuth:FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        mAuth = Firebase.auth
     }
 
     override fun onCreateView(
@@ -20,26 +27,34 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        mBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false)
+        return mBinding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mBinding.loginButton.setOnClickListener{
+            val email = mBinding.emailTiet.text.toString()
+            val pass = mBinding.passwordTiet.text.toString()
+            if(!email.isEmpty()&&!pass.isEmpty()){
+                mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
+                    if(it.isSuccessful){
+                        val result = it.result
+                        val currentUser = result.user!!
+                        (activity as AuthActivity).apply {
+                            getUser(currentUser.uid)
+                            transferData()
+                        }
+                    }else{
+                        Toast.makeText(requireContext(), "Login Failure", Toast.LENGTH_SHORT).show()
+                    }
                 }
+            }else{
+                Toast.makeText(activity, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
+        }
+
     }
+
 }

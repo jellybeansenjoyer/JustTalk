@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.justtalk.Kotlin.Adapter.ChatClickCallback
 import com.example.justtalk.Kotlin.Adapter.ChatListAdapter
@@ -19,18 +20,15 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class ChatFragment(private var user:User) : Fragment(), ChatClickCallback {
+class ChatFragment() : Fragment(), ChatClickCallback {
 
     lateinit private var mBinding:FragmentChatBinding
-    lateinit private var mAuth:FirebaseAuth
-    lateinit private var referenceUser: DatabaseReference
-
+    private val mViewModel:MainActivityViewModel by activityViewModels()
+    lateinit private var user:User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAuth = Firebase.auth
-        referenceUser = Firebase.database.reference.child("Users")
+        user = mViewModel.mUser.value!!
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,7 +41,7 @@ class ChatFragment(private var user:User) : Fragment(), ChatClickCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-           val chats = user.chatrefs
+           val chats = user.chatrefs!!
             val adapter = ChatListAdapter(this)
                 adapter.submitList(chats)
                 mBinding.recyclerViewChat.apply{
@@ -55,6 +53,6 @@ class ChatFragment(private var user:User) : Fragment(), ChatClickCallback {
     override fun onClick(user:User, view: View) {
         val bundle = Bundle()
         bundle.putString("abc123",user.id)
-        (activity as MainActivity).makeTransactions(Fragment::class,bundle)
+        (activity as MainActivity).makeTransactions(TalkFragment::class,bundle)
     }
 }
