@@ -54,6 +54,9 @@ class LoginFragment : Fragment() {
                 Toast.makeText(activity, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
         }
+        mBinding.createButton.setOnClickListener{
+            (activity as AuthActivity).makeTransaction(CreateFragment::class,null,"replace")
+        }
 
     }
 

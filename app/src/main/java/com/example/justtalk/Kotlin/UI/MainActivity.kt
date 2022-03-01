@@ -25,14 +25,14 @@ class MainActivity : AppCompatActivity() {
 
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
+        mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         val mIntent = intent
-        val user = mIntent.getSerializableExtra("AuthActivity") as User
+        val user = mIntent.getSerializableExtra("user") as User
 
         val fbuser = Firebase.auth.currentUser
 
         if(fbuser!=null){
-            mViewModel.setUserValue(user)
+            mViewModel.setUserValue(user!!)
             makeTransactions(ChatFragment::class)
         }
     }

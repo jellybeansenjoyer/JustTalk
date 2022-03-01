@@ -1,6 +1,7 @@
 package com.example.justtalk.Kotlin.UI
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+private const val TAG = "CreateFragment"
 class CreateFragment : Fragment() {
     lateinit private var mBinding : FragmentCreateBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,12 +41,16 @@ class CreateFragment : Fragment() {
             if(!email.isEmpty()&&!pass.isEmpty()&&!confpass.isEmpty()){
                 if(pass.equals(confpass)){
                     mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener {
+
                         if(it.isSuccessful){
                             val res = it.result
-                            (activity as AuthActivity).makeTransaction(InfoFragment::class)
+                            (activity as AuthActivity).makeTransaction(InfoFragment::class,null,"replace")
                         }else{
                             Toast.makeText(requireActivity(), "User Creation Failed", Toast.LENGTH_SHORT).show()
                         }
+                    }.addOnFailureListener {
+                        val stackTrace = it.stackTraceToString()
+                        Log.e(TAG,stackTrace)
                     }
                 }else{
                     Toast.makeText(requireContext(), "Passwords don't match", Toast.LENGTH_SHORT).show()

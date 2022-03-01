@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -14,16 +15,15 @@ import com.example.justtalk.R
 import com.example.justtalk.databinding.ActivityAuthBinding
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.text.DateFormat
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.reflect.KClass
 
+private const val TAG = "AuthActivity"
 class AuthActivity : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
     lateinit private var mReference: DatabaseReference
     lateinit private var mBinding : ActivityAuthBinding
@@ -35,44 +35,75 @@ class AuthActivity : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_auth)
         mReference = Firebase.database.reference.child("Users")
-
         val auth = Firebase.auth
-
         var fUserId:String? = null
+
         if(auth.currentUser!=null){
             fUser = auth.currentUser!!
             fUserId = fUser.uid
             getUser(fUserId)
-        }else{
-            //Make authentication
-            makeTransaction(LoginFragment::class)
         }
+    if(savedInstanceState==null)
+         makeTransaction(LoginFragment::class,null,"add")
 
 
 
     }
-    fun <T:Fragment> makeTransaction(fragment: KClass<T>, bundle:Bundle?=null){
-        supportFragmentManager.commit {
-            add(R.id.container,fragment.java,bundle)
-            addToBackStack(fragment::class.qualifiedName)
+    fun <T:Fragment> makeTransaction(fragment: KClass<T>, bundle:Bundle?=null,option:String){
+        when(option){
+            "replace"-> {
+                supportFragmentManager.commit {
+                    replace(R.id.container, fragment.java, bundle)
+                    addToBackStack(fragment.qualifiedName)
+                }
+            }
+                "add" -> {
+                        supportFragmentManager.commit {
+                        add(R.id.container,fragment.java,bundle)
+                        addToBackStack(fragment.qualifiedName)
+                       }
+                }
         }
     }
+
     fun showDialog(){
         DatePickerFragment(this).show(supportFragmentManager,"DatePickerDialog")
     }
+
+    //transfer data to the main activity
     fun transferData(){
-        val intent = Intent()
-        intent.putExtra("AuthActivity",mUser)
-        startActivityForResult(intent,123)
+        val intent = Intent(this,MainActivity::class.java)
+        if(mUser!=null){
+            Log.e(TAG,"user is not null")
+        }else{
+            Log.e(TAG,"user is null")
+        }
+        intent.putExtra("user",mUser)
+        startActivity(intent)
     }
+
     fun getUser(fUserId:String){
-        mReference.orderByChild("Id").equalTo(fUserId).addValueEventListener(object:
+        Log.e(TAG,"came first")
+        mReference.orderByKey().addValueEventListener(object:
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach {
-                    val result = it.getValue(User::class.java)
-                    mUser = result
-                }
+                    Log.e(TAG,"came second")
+                    val result = snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})!!
+                    result.values.forEach{
+                        if(it.id==fUserId){
+                            mUser = it
+                        }
+                    }
+//                result.values.forEach{
+//                    if(it.id==fUserId){
+//                        mUser = it
+//                    }
+//                }
+//                snapshot.children.forEach {
+//                    Log.e(TAG,it.key.toString())
+//                    val result = it.getValue(User::class.java)
+//                    mUser = result
+//                }
             }
             override fun onCancelled(error: DatabaseError) {
             }

@@ -32,6 +32,9 @@
             android:layout_height="wrap_content"
             android:hint="Username or Email"
             android:layout_margin="10dp"
+            app:hintTextColor="@color/marine_green"
+            app:boxStrokeColor="@color/marine_green"
+            android:textColorHint="@color/marine_green"
             app:boxCornerRadiusTopEnd="25dp"
             app:boxCornerRadiusBottomStart="25dp"
             app:boxCornerRadiusTopStart="25dp"
@@ -53,6 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Password"
+            app:hintTextColor="@color/marine_green"
+            app:boxStrokeColor="@color/marine_green"
+            android:textColorHint="@color/marine_green"
             app:boxCornerRadiusTopEnd="25dp"
             app:boxCornerRadiusBottomStart="25dp"
             app:boxCornerRadiusTopStart="25dp"
@@ -76,6 +82,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Re-Enter Password"
+            app:hintTextColor="@color/marine_green"
+            app:boxStrokeColor="@color/marine_green"
+            android:textColorHint="@color/marine_green"
             app:boxCornerRadiusTopEnd="25dp"
             app:boxCornerRadiusBottomStart="25dp"
             app:boxCornerRadiusTopStart="25dp"
@@ -97,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:backgroundTint="@color/marine_green"
-                android:text="Create Acount"/>
+                android:text="Create Account"/>
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

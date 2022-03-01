@@ -58,17 +58,17 @@ class TalkFragment(private var user:User) : Fragment() {
         var protagonist:String
         var friend:String
         if(user.name.equals(messageRoom.sender)){
-            protagonist = user.name
+//            protagonist = user.name
             friend = messageRoom.reciever
         }else{
             protagonist = messageRoom.reciever
-            friend = user.name
+//            friend = user.name
         }
-        val us = search(protagonist)!!
-        val them = search(friend)!!
+//        val us = search(protagonist)!!
+//        val them = search(friend)!!
 
-        Glide.with(requireActivity()).load(them.dp).into(mBinding.dpToolbar)
-        mBinding.toolbar.setTitle(them.name)
+//        Glide.with(requireActivity()).load(them.dp).into(mBinding.dpToolbar)
+//        mBinding.toolbar.setTitle(them.name)
         mBinding.recyclerViewMessage.apply {
             val mAdapter = MessageThreadAdapter()
             mAdapter.submitList(messageThread)

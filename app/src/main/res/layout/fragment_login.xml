@@ -49,6 +49,11 @@
             app:boxCornerRadiusBottomStart="25dp"
             app:boxCornerRadiusTopStart="25dp"
             app:boxCornerRadiusBottomEnd="25dp"
+            app:boxStrokeWidth="0dp"
+            app:hintTextColor="@color/marine_green"
+            android:textColorHint="@color/marine_green"
+            app:boxStrokeColor="@color/marine_green"
+
             app:layout_constraintTop_toBottomOf="@id/title_app_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -66,6 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="Password"
+            app:boxStrokeColor="@color/marine_green"
+            app:hintTextColor="@color/marine_green"
+            app:boxStrokeWidth="0dp"
+            android:textColorHint="@color/marine_green"
             app:boxCornerRadiusTopEnd="25dp"
             app:boxCornerRadiusBottomStart="25dp"
             app:boxCornerRadiusTopStart="25dp"

@@ -34,6 +34,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         val view = LayoutInflater.from(activity).inflate(R.layout.fragment_chat,container,false)
         mBinding = DataBindingUtil.bind(view)!!;
         return mBinding.root
