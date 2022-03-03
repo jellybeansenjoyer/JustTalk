@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.ViewModelProvider
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.ActivityAuthBinding
@@ -34,6 +35,7 @@ class AuthActivity : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_auth)
+        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
         mReference = Firebase.database.reference.child("Users")
         val auth = Firebase.auth
         var fUserId:String? = null
@@ -43,10 +45,9 @@ class AuthActivity : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
             fUserId = fUser.uid
             getUser(fUserId)
         }
+
     if(savedInstanceState==null)
          makeTransaction(LoginFragment::class,null,"add")
-
-
 
     }
     fun <T:Fragment> makeTransaction(fragment: KClass<T>, bundle:Bundle?=null,option:String){
@@ -91,7 +92,9 @@ class AuthActivity : AppCompatActivity(),DatePickerDialog.OnDateSetListener {
                     val result = snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})!!
                     result.values.forEach{
                         if(it.id==fUserId){
+                            Log.e(TAG,it.email.toString())
                             mUser = it
+                            viewModel.setUserValue(it)
                         }
                     }
 //                result.values.forEach{

@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
@@ -39,7 +40,7 @@ class InfoFragment() : Fragment() {
             }
         }
     })
-
+    private val viewModel :AuthViewModel by activityViewModels()
     lateinit private var mBinding : FragmentInfoBinding
     private var image: String? =null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +67,8 @@ class InfoFragment() : Fragment() {
                 pushToDatabase(name)
                 (activity as AuthActivity).apply {
                     getUser(auth.uid)
-                    transferData()
+                    makeTransaction(FindFriendsFragment::class,null,"replace")
+//                    transferData()
                 }
             } else
                 Toast.makeText(requireContext(), "name is required", Toast.LENGTH_SHORT).show()
@@ -76,6 +78,7 @@ class InfoFragment() : Fragment() {
             getImageFromGallery()
         }
     }
+
     fun getImageFromGallery(){
         val intent = Intent()
         intent.setType("image/*")

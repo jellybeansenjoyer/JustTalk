@@ -10,9 +10,9 @@ data class User(
     var bday:String?="",
     var bio:String?="",
     var phno:String?="",
-    var chatrefs:List<String>?=null, //No of views in chat fragment
-    var friendrefs:List<String>?=null, //No of friends that can be texted
-    var reqrefs:List<String>?=null //No of Reqests in the Activity
+    var chatrefs:ArrayList<String>?= ArrayList(), //No of views in chat fragment
+    var friendrefs:ArrayList<String>?= ArrayList(), //No of friends that can be texted
+    var reqrefs:ArrayList<String>?=ArrayList() //No of Reqests in the Activity
 ):Serializable{
 
 }
