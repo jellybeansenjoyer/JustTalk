@@ -17,10 +17,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="10dp"
                 app:titleTextAppearance="@style/JustTalk.Toolbar.Title"
                 android:layout_margin="4dp"
-                tools:title="@string/app_name"
+                app:title="JustTalk"
                 />
         </com.google.android.material.appbar.AppBarLayout>
 

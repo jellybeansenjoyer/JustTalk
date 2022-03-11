@@ -22,7 +22,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class ChatListAdapter(private val mListener: ChatClickCallback) : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
-    private var oldList:List<String> = emptyList()
+    private var oldList:List<User> = emptyList()
     private var mReference: DatabaseReference
     init {
         mReference = Firebase.database.reference.child("Users")
@@ -55,26 +55,12 @@ class ChatListAdapter(private val mListener: ChatClickCallback) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        val user = search(oldList.get(position))!!
-        holder.bind(user)
+        holder.bind(oldList[position])
     }
-    fun search(value:String):User?{
-        var user:User? = null
-            mReference.orderByChild("id").equalTo(value).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.children.forEach {
-                       val result = it.getValue(User::class.java)!!
-                        user = result
-                    }
-                }
-                override fun onCancelled(error: DatabaseError) {
-                }
-            })
-        return user
-    }
+
     override fun getItemCount() = oldList.size
 
-     fun submitList(newList:List<String>){
+     fun submitList(newList:List<User>){
         val diffutil = DiffUtilChat(oldList,newList)
         val calcdiff = DiffUtil.calculateDiff(diffutil)
         oldList = newList

@@ -20,16 +20,19 @@ import java.time.temporal.ValueRange
 
 private const val TAG = "FindFriendsFragment"
 class FindFriendsFragment : Fragment() {
+
     lateinit private var mBinding : FragmentFindFriendsBinding
-    lateinit private var reference: DatabaseReference
-    lateinit private var user: User
+    lateinit private var mReference: DatabaseReference
+    lateinit private var mReqReference: DatabaseReference
+    lateinit private var mUser: User
     private var listOfPeople  = ArrayList<User>()
-    private var listOfFriends : ArrayList<String> = ArrayList<String>()
     private val model : AuthViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        reference  = Firebase.database.reference.child("Users")
-        user = model.mUser.value!!
+        mReference  = Firebase.database.reference.child("Users")
+        mReqReference = Firebase.database.reference.child("RequestRoom")
+        mUser = model.mUser.value!!
     }
 
     override fun onCreateView(
@@ -49,53 +52,37 @@ class FindFriendsFragment : Fragment() {
         val mAdapter = FriendsListAdapter(object: FriendListAddFriendListener{
             override fun sendRequest(user: User) {
 //                user.friendrefs!!.add(user.id!!)
-                  listOfFriends.add(user.id!!)
-                pushToDatabase()
+                  val k = mReqReference.push().key
+                  mReqReference.updateChildren(hashMapOf(Pair<String,Any>("${user.id!!}/friends/${k}",mUser.id!!)))
             }
         })
+
         model.mUsers.observe(this){
             mAdapter.submitList(it)
         }
+
         mBinding.peopleRecyclerView.apply{
             this.adapter = mAdapter
             this.layoutManager = LinearLayoutManager(requireContext())
         }
+        mBinding.continueToMain.setOnClickListener{
+            (activity as AuthActivity).transferData()
+        }
     }
     fun createList(list:ArrayList<User>){
-        reference.orderByKey().addValueEventListener(object : ValueEventListener{
+        mReference.orderByKey().addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                val type = object:GenericTypeIndicator<HashMap<String,User>>(){}
+                val type = object : GenericTypeIndicator<HashMap<String, User>>() {}
                 val result = snapshot.getValue(type)!!
-                result.values.forEach{
-                    list.add(it)
+                Log.e(TAG,result.size.toString())
+                result.entries.forEach {
+                    list.add(it.value)
                 }
-                model.setList(list)
-                Log.e(TAG,list.size.toString())
+                    model.setList(list)
             }
-
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
     }
-    fun pushToDatabase(){
-        //instead get the key to current user
-        reference.orderByKey().addValueEventListener(object:ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val type = object:GenericTypeIndicator<HashMap<String,User>>(){}
-                val result = snapshot.getValue(type)!!
-                result.values.forEach{
-                    if(it.id==user.id){
-                        val user = User(it.id,it.name,it.email,it.dp,friendrefs = listOfFriends)
-                        val export = hashMapOf<String,Any>(Pair<String,User>(snapshot.key!!,user))
-                        reference.updateChildren(export)
-                    }
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-        })
-    }
 }

@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.*
 
 class LoginFragment : Fragment() {
     lateinit private var mBinding:FragmentLoginBinding
@@ -43,8 +45,7 @@ class LoginFragment : Fragment() {
                         val result = it.result
                         val currentUser = result.user!!
                         (activity as AuthActivity).apply {
-                            getUser(currentUser.uid)
-                            transferData()
+                            getUserAndUpdateVM(currentUser.uid,true)
                         }
                     }else{
                         Toast.makeText(requireContext(), "Login Failure", Toast.LENGTH_SHORT).show()

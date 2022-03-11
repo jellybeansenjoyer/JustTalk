@@ -23,8 +23,8 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
             mBinding = DataBindingUtil.bind(view)!!
         }
         fun bind(user:User){
-
             mBinding.nameUser.setText(user.name)
+            Log.e(TAG,user.dp.toString())
             Glide.with(parent.context).load(user.dp).into(mBinding.userPhoto)
             mBinding.taptobefriend.setOnClickListener{
                 Log.e(TAG,user.dp.toString())

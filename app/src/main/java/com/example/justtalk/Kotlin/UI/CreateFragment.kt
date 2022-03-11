@@ -35,15 +35,15 @@ class CreateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val mAuth = Firebase.auth
         mBinding.createButton2.setOnClickListener{
+
             val email = mBinding.emailTiet.text.toString()
             val pass = mBinding.passwordTiet.text.toString()
-            val confpass = mBinding.passwordTiet2.text.toString()
-            if(!email.isEmpty()&&!pass.isEmpty()&&!confpass.isEmpty()){
-                if(pass.equals(confpass)){
-                    mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener {
+            val confirmpass = mBinding.passwordTiet2.text.toString()
 
+            if(!email.isEmpty()&&!pass.isEmpty()&&!confirmpass.isEmpty()){
+                 if(pass.equals(confirmpass)){
+                    mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener {
                         if(it.isSuccessful){
-                            val res = it.result
                             (activity as AuthActivity).makeTransaction(InfoFragment::class,null,"replace")
                         }else{
                             Toast.makeText(requireActivity(), "User Creation Failed", Toast.LENGTH_SHORT).show()

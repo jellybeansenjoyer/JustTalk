@@ -15,13 +15,12 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
     class MessageViewHolder(private val view: View):RecyclerView.ViewHolder(view){
         lateinit private var mBinding:ModelMessageBinding
         fun bind(message:Message){
-            if(message.type.equals("text"))
-            mBinding.message.setText(message.content as String)
+            mBinding.message.setText(message.content)
         }
         companion object{
             @JvmStatic
             fun getInstance(parent:ViewGroup): MessageViewHolder {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.model_chat,parent,false)
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.model_message,parent,false)
                 return MessageViewHolder(view)
             }
         }
@@ -41,13 +40,11 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
         val diffUtilCb = object : DiffUtil.Callback(){
             override fun getOldListSize() = oldList.size
             override fun getNewListSize() = newList.size
-
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 return oldList.get(oldItemPosition)==newList.get(newItemPosition)
             }
-
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldList.get(oldItemPosition).content.equals(newList.get(newItemPosition))
+                return oldList.get(oldItemPosition).equals(newList.get(newItemPosition))
             }
 
         }

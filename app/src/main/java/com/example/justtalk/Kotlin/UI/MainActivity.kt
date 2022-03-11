@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.justtalk.Kotlin.models.Parcel
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.ActivityMainBinding
@@ -23,24 +24,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //intialize view model
 
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         val mIntent = intent
-        val user = mIntent.getSerializableExtra("user") as User
-
+        val parcel = mIntent.getSerializableExtra("parcel") as User
         val fbuser = Firebase.auth.currentUser
 
         if(fbuser!=null){
-            mViewModel.setUserValue(user!!)
-            makeTransactions(ChatFragment::class)
+            mViewModel.setUserValue(parcel)
+            makeTransactions(FriendsFragment::class,null,"Add")
         }
     }
 
-    fun <T:Fragment> makeTransactions(fragment:KClass<T>,data:Bundle?=null){
-        supportFragmentManager.commit {
-            add(R.id.container,fragment.java,data)
-            addToBackStack(fragment.java.name)
+    fun <T:Fragment> makeTransactions(fragment:KClass<T>,data:Bundle?=null,flag:String="Replace"){
+        when(flag) {
+            "Add" -> {
+                supportFragmentManager.commit {
+                    add(R.id.container, fragment.java, data)
+                    addToBackStack(fragment.java.name)
+                }
+            }
+            "Replace" -> {
+                supportFragmentManager.commit {
+                    replace(R.id.container, fragment.java, data)
+                    addToBackStack(fragment.java.name)
+                }
+            }
         }
     }
 }

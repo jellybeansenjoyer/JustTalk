@@ -32,6 +32,8 @@ private const val TAG = "InfoFragment"
 private const val PICK_IMAGE = 123
 class InfoFragment() : Fragment() {
     private var fbuser: FirebaseUser?=null
+    lateinit private var key:String
+    private val model : AuthViewModel by activityViewModels()
     private var registry: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),object:ActivityResultCallback<ActivityResult>{
         override fun onActivityResult(result: ActivityResult?) {
             if(result!!.resultCode== RESULT_OK){
@@ -40,7 +42,6 @@ class InfoFragment() : Fragment() {
             }
         }
     })
-    private val viewModel :AuthViewModel by activityViewModels()
     lateinit private var mBinding : FragmentInfoBinding
     private var image: String? =null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,15 +61,15 @@ class InfoFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val auth = Firebase.auth.currentUser!!
+        val fbuser = auth.uid
         mBinding.createButton.setOnClickListener{
             //FindFriendsActivity
             val name = mBinding.nameFieldEditText.text.toString()
             if(!name.isEmpty()){
                 pushToDatabase(name)
                 (activity as AuthActivity).apply {
-                    getUser(auth.uid)
                     makeTransaction(FindFriendsFragment::class,null,"replace")
-//                    transferData()
+                    getUserAndUpdateVM(fbuser,false)
                 }
             } else
                 Toast.makeText(requireContext(), "name is required", Toast.LENGTH_SHORT).show()
@@ -86,13 +87,17 @@ class InfoFragment() : Fragment() {
         registry.launch(intent)
     }
 
-    fun pushToDatabase(name:String){
+    fun pushToDatabase(mName:String){
         val mReference = Firebase.database.reference.child("Users")
-        val id = fbuser!!.uid
-        val name = name
+         key = mReference.push().key!!
+        val id = key
+        val name = mName
+        val uid = fbuser!!.uid
         val email = fbuser!!.email.toString()
         val dp:String = image!!
-        val mUser = User(id=id,name=name,email=email,dp=dp)
-        mReference.push().setValue(mUser)
+        val mUser = User(id=id,name=name,uid=uid,email=email,dp=dp)
+        model.setUserKey(key)
+        model.setUserValue(mUser)
+        mReference.updateChildren(hashMapOf(Pair<String,Any>(key,mUser)))
     }
 }

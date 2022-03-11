@@ -1,8 +1,9 @@
 package com.example.justtalk.Kotlin.Adapter
 
 import androidx.recyclerview.widget.DiffUtil
+import com.example.justtalk.Kotlin.models.User
 
-class DiffUtilChat(private val oldList:List<String>,private val newList:List<String>) : DiffUtil.Callback() {
+class DiffUtilChat(private val oldList:List<User>, private val newList:List<User>) : DiffUtil.Callback() {
     override fun getOldListSize() = oldList.size
     override fun getNewListSize() = newList.size
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

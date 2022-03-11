@@ -9,6 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/marine_green"
+            android:elevation="10dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -29,10 +30,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="10dp"
                 app:titleTextAppearance="@style/JustTalk.Toolbar.Title2"
                 android:layout_margin="4dp"
-                tools:title="Raghav"
+                app:title="Raghav"
                 />
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,7 +45,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/message_field_editTextLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="Message..."
@@ -55,7 +55,7 @@
             app:boxCornerRadiusBottomEnd="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toStartOf="@id/sendButton">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/message_field_editText"
                 android:layout_width="match_parent"
@@ -63,5 +63,17 @@
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sendButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/marine_green"
+            android:src="@drawable/ic_send"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="12dp"
+            tools:layout_editor_absoluteX="228dp"
+            tools:layout_editor_absoluteY="228dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
