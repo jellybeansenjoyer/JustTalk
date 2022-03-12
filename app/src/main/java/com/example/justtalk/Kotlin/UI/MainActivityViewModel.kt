@@ -32,8 +32,22 @@ class MainActivityViewModel : ViewModel() {
     val _messageList : LiveData<ArrayList<Message>>
     get() = mMessageList
 
+    private var mFriend : MutableLiveData<User> = MutableLiveData()
+    val _mFriend : LiveData<User>
+    get() = mFriend
+    init {
+        mMessageList.value = ArrayList<Message>()
+    }
+    fun setFriend(friend : User){
+        mFriend.value = friend
+    }
     fun setMessageList(messageList:ArrayList<Message>){
         mMessageList.value = messageList
+    }
+
+    fun setMessageModified(message:Message){
+        mMessageList.value!!.add(message)
+        mMessageList.postValue(mMessageList.value)
     }
     fun setCurrentRoom(room:ChatRef){
         currentRoom.value = room

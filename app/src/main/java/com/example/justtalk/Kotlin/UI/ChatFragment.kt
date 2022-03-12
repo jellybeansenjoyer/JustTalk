@@ -66,13 +66,17 @@ class ChatFragment() : Fragment(), ChatClickCallback {
                 }
     }
 
-    override fun onClick(mUser:User, view: View) {
-        Firebase.database.reference.child("ChatRoomRef").orderByKey().equalTo(mUser.id).addValueEventListener(object:ValueEventListener{
+    override fun onClick(user:User, view: View) {
+        Firebase.database.reference.child("ChatRoomRef/${mUser.id}").orderByKey().addValueEventListener(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.getValue(object:GenericTypeIndicator<HashMap<String,ChatRef>>(){})?.let{
                     it.entries.forEach{
-                        val result = it.value
-                        mViewModel.setCurrentRoom(result)
+                        if(it.value.freindId.equals(user.id)){
+                            val result = it.value
+                            mViewModel.setCurrentRoom(result)
+                            (activity as MainActivity).makeTransactions(TalkFragment::class)
+                            return
+                        }
                     }
                 }
             }
@@ -87,10 +91,12 @@ class ChatFragment() : Fragment(), ChatClickCallback {
                     it.entries.forEach{
                         val result = it.value
                         val endUser = result.freindId
+                        val chatRef = result.chatRoomId
                         mReference.orderByKey().equalTo(endUser).addValueEventListener(object:ValueEventListener{
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let{
                                     it.values.forEach {
+                                        it.chatroomref = chatRef
                                         listOfPeople.add(it)
                                     }
                                     mViewModel.setListOfFriends(listOfPeople)

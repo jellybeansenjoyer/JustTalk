@@ -23,9 +23,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //intialize view model
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
         val mIntent = intent
         val parcel = mIntent.getSerializableExtra("parcel") as User
         val fbuser = Firebase.auth.currentUser

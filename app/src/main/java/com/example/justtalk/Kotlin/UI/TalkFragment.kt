@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.justtalk.Kotlin.Adapter.MessageThreadAdapter
+import com.example.justtalk.Kotlin.models.ChatRef
 import com.example.justtalk.Kotlin.models.Message
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
@@ -24,12 +25,14 @@ class TalkFragment : Fragment() {
     lateinit private var mRoom : DatabaseReference
     private val mModel : MainActivityViewModel by activityViewModels()
     lateinit private var mUser: User
+    lateinit private var mChat : ChatRef
     private var listOfMessages = ArrayList<Message>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mUser = mModel.mUser.value!!
-        mRoom = Firebase.database.reference.child("MessageRoom/${mUser.id}")
-        loadMessageList()
+        mChat = mModel._currentRoom.value!!
+        mModel.setMessageList(ArrayList())
+        mRoom = Firebase.database.reference.child("MessageRoom/${mChat.chatRoomId}/")
     }
 
     override fun onCreateView(
@@ -55,8 +58,6 @@ class TalkFragment : Fragment() {
             if(!text.isEmpty()){
                 val message = Message(text,System.currentTimeMillis().toString())
                 mRoom.push().setValue(message)
-                listOfMessages.add(message)
-                mModel.setMessageList(listOfMessages)
                 mBinding.messageFieldEditText.setText("")
             }
         }
@@ -64,6 +65,23 @@ class TalkFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
+
+        mRoom.addChildEventListener(object: ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                snapshot.getValue(Message::class.java)?.let{
+                    listOfMessages.add(it)
+                    mModel.setMessageList(listOfMessages)
+                }
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
     fun loadMessageList(){
@@ -79,5 +97,20 @@ class TalkFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mModel.setListOfFriends(ArrayList())
+
+    }
+    override fun onPause() {
+        super.onPause()
+        mModel.setListOfFriends(ArrayList())
+
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mModel.setListOfFriends(ArrayList())
     }
 }

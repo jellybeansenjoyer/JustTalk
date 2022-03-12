@@ -10,9 +10,9 @@
             android:layout_height="wrap_content"
             android:background="@color/marine_green"
             android:elevation="10dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:id="@+id/back_button"
                 android:layout_width="42dp"

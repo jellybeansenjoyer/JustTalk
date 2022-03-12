@@ -3,6 +3,7 @@ package com.example.justtalk.Kotlin.Adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.justtalk.Kotlin.models.Message
@@ -14,6 +15,9 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
 
     class MessageViewHolder(private val view: View):RecyclerView.ViewHolder(view){
         lateinit private var mBinding:ModelMessageBinding
+        init{
+            mBinding = DataBindingUtil.bind(view)!!
+        }
         fun bind(message:Message){
             mBinding.message.setText(message.content)
         }
@@ -51,5 +55,6 @@ class MessageThreadAdapter : RecyclerView.Adapter<MessageThreadAdapter.MessageVi
         val calc = DiffUtil.calculateDiff(diffUtilCb)
         oldList = newList
         calc.dispatchUpdatesTo(this)
+        this.notifyDataSetChanged()
     }
 }

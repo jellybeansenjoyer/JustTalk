@@ -89,17 +89,9 @@ class FriendsFragment : Fragment(),ChatClickCallback {
 
     override fun onClick(user: User, view: View) {
         val ref = Firebase.database.reference
-//        val friendsRef = ref.child("FriendsRoom")
-//        val chatref = ref.child("ChatRoom")
         val chatRoomRef = ref.child("ChatRoomRef")
         val messageRoom = ref.child("MessageRoom")
-//        val key = friendsRef.push().key!!
-//        friendsRef.updateChildren(hashMapOf<String,Any>(Pair<String,String>("/${mUser.id}/${key}/",user.id!!)))
         val ssid = chatRoomRef.push().key!!
-        model.setSSIDValue(ssid)
-//        val chat = Chat(sender = mUser.id!!,reciever = user.id!!,messageRoomReference = ssid)
-//        val key2 = chatref.push().key!!
-//        chatref.updateChildren(hashMapOf<String,Any>(Pair("/${mUser.id}/${ssid}/${key2}",chat)))
         val chatObjA = ChatRef(user.id!!,ssid)
         val chatObjB = ChatRef(mUser.id!!,ssid)
         val uniqueIdA = chatRoomRef.push().key!!
