@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit private var mBinding : ActivityMainBinding
+    lateinit var mBinding : ActivityMainBinding
     lateinit private var mViewModel : MainActivityViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

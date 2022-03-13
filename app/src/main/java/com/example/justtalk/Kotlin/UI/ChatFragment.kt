@@ -37,6 +37,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         super.onCreate(savedInstanceState)
         mUser = mViewModel.mUser.value!!
         mReference = Firebase.database.reference.child("Users")
+
     }
 
     override fun onCreateView(
@@ -74,7 +75,11 @@ class ChatFragment() : Fragment(), ChatClickCallback {
                         if(it.value.freindId.equals(user.id)){
                             val result = it.value
                             mViewModel.setCurrentRoom(result)
-                            (activity as MainActivity).makeTransactions(TalkFragment::class)
+                            (activity as MainActivity).apply{
+                                makeTransactions(TalkFragment::class)
+                                val parentBinding = this.mBinding
+                                parentBinding.tabLayout.visibility = View.GONE
+                            }
                             return
                         }
                     }
