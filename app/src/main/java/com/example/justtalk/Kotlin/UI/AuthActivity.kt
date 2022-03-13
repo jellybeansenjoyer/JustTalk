@@ -32,6 +32,13 @@ private const val TAG = "AuthActivity"
 class AuthActivity : AppCompatActivity(),
     DatePickerDialog.OnDateSetListener {
 
+    override fun onBackPressed() {
+        val fragment = mBinding.container.getFragment<Fragment>()
+        when(fragment){
+            is LoginFragment ->   finish()
+            else -> supportFragmentManager.popBackStack()
+        }
+    }
     lateinit private var mReference: DatabaseReference
     lateinit private var mBinding : ActivityAuthBinding
     lateinit private var fUser: FirebaseUser

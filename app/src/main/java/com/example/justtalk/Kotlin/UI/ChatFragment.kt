@@ -48,7 +48,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         mBinding = DataBindingUtil.bind(view)!!
         val window = (activity as MainActivity).window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = Color.GREEN
+        window.statusBarColor = resources.getColor(R.color.marine_green)
         return mBinding.root
     }
 
