@@ -37,6 +37,8 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         super.onCreate(savedInstanceState)
         mUser = mViewModel.mUser.value!!
         mReference = Firebase.database.reference.child("Users")
+        Log.e(TAG,"onCreate called")
+        createList()
 
     }
 
@@ -45,8 +47,14 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        Log.e(TAG,"onCreateView called")
+
         val view = LayoutInflater.from(activity).inflate(R.layout.fragment_chat,container,false)
         mBinding = DataBindingUtil.bind(view)!!
+        val tabLayout = (activity as MainActivity).mBinding.tabLayout
+        if(tabLayout.visibility==View.GONE){
+            tabLayout.visibility = View.VISIBLE
+        }
         val window = (activity as MainActivity).window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(R.color.marine_green)
@@ -55,8 +63,12 @@ class ChatFragment() : Fragment(), ChatClickCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.e(TAG,"onViewCreated called")
+
             val adapter = ChatListAdapter(this)
-            createList()
+            if(savedInstanceState==null) {
+                Log.e(TAG,"it came inside")
+            }
                 mViewModel.listOfFriends.observe(requireActivity()){
                     adapter.submitList(listOfPeople)
                     Log.e(TAG,listOfPeople.size.toString())
@@ -90,33 +102,64 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         })
     }
     fun createList(){
-         Firebase.database.reference.child("ChatRoomRef/${mViewModel.mUser.value!!.id!!}/").orderByKey().addValueEventListener(object:ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(object : GenericTypeIndicator<HashMap<String, ChatRef>>(){})?.let{
-                    it.entries.forEach{
-                        val result = it.value
-                        val endUser = result.freindId
-                        val chatRef = result.chatRoomId
-                        mReference.orderByKey().equalTo(endUser).addValueEventListener(object:ValueEventListener{
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let{
-                                    it.values.forEach {
-                                        it.chatroomref = chatRef
-                                        listOfPeople.add(it)
-                                    }
-                                    mViewModel.setListOfFriends(listOfPeople)
+        Firebase.database.reference.child("ChatRoomRef/${mViewModel.mUser.value!!.id!!}/").addChildEventListener(object:ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                snapshot.getValue(ChatRef::class.java)?.let{
+                    val result = it
+                    val endUser = result.freindId
+                    val chatRef = result.chatRoomId
+                    mReference.orderByKey().equalTo(endUser).addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let{
+                                it.values.forEach {
+                                    it.chatroomref = chatRef
+                                    listOfPeople.add(it)
                                 }
+                                mViewModel.setListOfFriends(listOfPeople)
                             }
-                            override fun onCancelled(error: DatabaseError) {
-                            }
-                        })
-                    }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+                    })
                 }
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
             }
             override fun onCancelled(error: DatabaseError) {
             }
         })
+//
+//         Firebase.database.reference.child("ChatRoomRef/${mViewModel.mUser.value!!.id!!}/").orderByKey().addValueEventListener(object:ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                snapshot.getValue(object : GenericTypeIndicator<HashMap<String, ChatRef>>(){})?.let{
+//                    it.entries.forEach{
+//                        val result = it.value
+//                        val endUser = result.freindId
+//                        val chatRef = result.chatRoomId
+//                        mReference.orderByKey().equalTo(endUser).addValueEventListener(object:ValueEventListener{
+//                            override fun onDataChange(snapshot: DataSnapshot) {
+//                                snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let{
+//                                    it.values.forEach {
+//                                        it.chatroomref = chatRef
+//                                        listOfPeople.add(it)
+//                                    }
+//                                    mViewModel.setListOfFriends(listOfPeople)
+//                                }
+//                            }
+//                            override fun onCancelled(error: DatabaseError) {
+//                            }
+//                        })
+//                    }
+//                }
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//            }
+//        })
     }
-    
+
 
 }

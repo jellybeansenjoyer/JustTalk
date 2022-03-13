@@ -21,6 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var mBinding : ActivityMainBinding
     lateinit private var mViewModel : MainActivityViewModel
+    override fun onBackPressed() {
+        finish()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //intialize view model
