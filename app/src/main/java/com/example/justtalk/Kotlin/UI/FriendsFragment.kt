@@ -54,7 +54,7 @@ class FriendsFragment : Fragment(),ChatClickCallback {
             adapter = mAdapter
         }
         mBinding.moveToMain.setOnClickListener{
-            (activity as MainActivity).makeTransactions(ChatFragment::class,null,"Replace")
+            (activity as MainActivity).makeTransactions(ChatFragment::class,null)
         }
     }
 
