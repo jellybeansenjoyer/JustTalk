@@ -31,6 +31,7 @@ class FriendsFragment : Fragment(),ChatClickCallback {
         super.onCreate(savedInstanceState)
         mUser = model.mUser.value!!
         mReference = Firebase.database.reference.child("Users")
+        createList()
     }
 
     override fun onCreateView(
@@ -45,7 +46,6 @@ class FriendsFragment : Fragment(),ChatClickCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mAdapter = FriendsAdapter(mUser,this)
-        createList()
         model.listOfRequests.observe(requireActivity()){
             mAdapter.submitList(listOfRequestsUser)
         }

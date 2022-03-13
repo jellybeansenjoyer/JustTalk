@@ -38,8 +38,11 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         mUser = mViewModel.mUser.value!!
         mReference = Firebase.database.reference.child("Users")
         Log.e(TAG,"onCreate called")
-        createList()
-
+        if(mViewModel.listOfFriends.value==null)
+            createList()
+        else{
+            listOfPeople =  mViewModel.listOfFriends.value!!
+        }
     }
 
     override fun onCreateView(
@@ -66,9 +69,6 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         Log.e(TAG,"onViewCreated called")
 
             val adapter = ChatListAdapter(this)
-            if(savedInstanceState==null) {
-                Log.e(TAG,"it came inside")
-            }
                 mViewModel.listOfFriends.observe(requireActivity()){
                     adapter.submitList(listOfPeople)
                     Log.e(TAG,listOfPeople.size.toString())
