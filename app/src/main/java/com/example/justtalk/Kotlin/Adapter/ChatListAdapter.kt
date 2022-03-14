@@ -38,7 +38,7 @@ class ChatListAdapter(private val mListener: ChatClickCallback) : RecyclerView.A
                Glide.with(context).load(user.dp).into(mBinding.dpUser)
                mBinding.nameUser.setText(user.name)
                mBinding.card.setOnClickListener{
-                   mListener.onClick(user,view)
+                   mListener.onClick(user,view,false)
                }
         }
 

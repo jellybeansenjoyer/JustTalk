@@ -25,7 +25,7 @@ class FriendsFragment : Fragment(),ChatClickCallback {
     private val model : MainActivityViewModel by activityViewModels()
     lateinit private var mUser : User
     private var listOfRequestsUser:ArrayList<User> = ArrayList()
-    private val listOfRequests:ArrayList<String> = ArrayList()
+    lateinit private var mAdapter: FriendsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +48,7 @@ class FriendsFragment : Fragment(),ChatClickCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mAdapter = FriendsAdapter(mUser,this)
+        mAdapter = FriendsAdapter(mUser,this)
         model.listOfRequests.observe(requireActivity()){
             mAdapter.submitList(listOfRequestsUser)
         }
@@ -117,15 +117,42 @@ class FriendsFragment : Fragment(),ChatClickCallback {
 //        })
     }
 
-    override fun onClick(user: User, view: View) {
-        val ref = Firebase.database.reference
-        val chatRoomRef = ref.child("ChatRoomRef")
-        val messageRoom = ref.child("MessageRoom")
-        val ssid = chatRoomRef.push().key!!
-        val chatObjA = ChatRef(user.id!!,ssid)
-        val chatObjB = ChatRef(mUser.id!!,ssid)
-        val uniqueIdA = chatRoomRef.push().key!!
-        val uniqueIdB = chatRoomRef.push().key!!
-        chatRoomRef.updateChildren(hashMapOf<String,Any>(Pair("${mUser.id!!}/${uniqueIdA}",chatObjA),Pair("${user.id!!}/${uniqueIdB}",chatObjB)))
+    override fun onClick(user: User, view: View,yesNo: Boolean) {
+        //Setting the number of friends in the database to null
+        Firebase.database.reference.child("RequestRoom/${mUser.id!!}/friends/").orderByValue().equalTo(user.id!!).addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.getValue(object: GenericTypeIndicator<HashMap<String, String>>(){})?.let{
+                    it.keys.forEach {
+                        Firebase.database.reference.child("RequestRoom/${mUser.id!!}/friends/${it}").setValue(null)
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
+        //Removing Item when it is accepted
+        listOfRequestsUser.remove(user)
+        model.setListOfRequests(listOfRequestsUser)
+        mAdapter.notifyItemRemoved(listOfRequestsUser.indexOf(user))
+
+        if(yesNo) {
+            val ref = Firebase.database.reference
+            val chatRoomRef = ref.child("ChatRoomRef")
+            val messageRoom = ref.child("MessageRoom")
+            val ssid = chatRoomRef.push().key!!
+            val chatObjA = ChatRef(user.id!!, ssid)
+            val chatObjB = ChatRef(mUser.id!!, ssid)
+            val uniqueIdA = chatRoomRef.push().key!!
+            val uniqueIdB = chatRoomRef.push().key!!
+            chatRoomRef.updateChildren(
+                hashMapOf<String, Any>(
+                    Pair(
+                        "${mUser.id!!}/${uniqueIdA}",
+                        chatObjA
+                    ), Pair("${user.id!!}/${uniqueIdB}", chatObjB)
+                )
+            )
+        }
     }
 }

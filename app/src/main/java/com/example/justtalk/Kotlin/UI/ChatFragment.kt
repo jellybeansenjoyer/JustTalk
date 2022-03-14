@@ -80,7 +80,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
                 }
     }
 
-    override fun onClick(user:User, view: View) {
+    override fun onClick(user:User, view: View,yesNo: Boolean) {
         Firebase.database.reference.child("ChatRoomRef/${mUser.id}").orderByKey().addValueEventListener(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.getValue(object:GenericTypeIndicator<HashMap<String,ChatRef>>(){})?.let{

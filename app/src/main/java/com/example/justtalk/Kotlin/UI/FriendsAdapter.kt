@@ -37,11 +37,12 @@ class FriendsAdapter(private val currentUser:User,private val clickedUserListene
             Glide.with(parent.context).load(user.dp).into(mBinding.userPhoto)
 
             mBinding.cancelRequest.setOnClickListener{
-                cancelListener.cancelledRequest(user)
+                chatClickCallback.onClick(user,view,false)
+//                cancelListener.cancelledRequest(user)
             }
             mBinding.friendAccept.setOnClickListener {
                 cancelListener.cancelledRequest(user)
-                chatClickCallback.onClick(user,view)
+                chatClickCallback.onClick(user,view,true)
             }
         }
 
@@ -90,6 +91,7 @@ class FriendsAdapter(private val currentUser:User,private val clickedUserListene
                        val map = it
                        map.entries.forEach{
                            mReference.child("${user.id}/friends/${currentUser.id}").setValue(null)
+
                        }
                    }
             }
