@@ -38,8 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-        makeTransactions(RecyclerViewRemoveIt::class)
-        return
+
         if(savedInstanceState==null){
             mBinding.tabLayout.selectTab(mBinding.tabLayout.getTabAt(0))
             makeTransactions(ChatFragment::class)
