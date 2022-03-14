@@ -32,7 +32,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:titleTextAppearance="@style/JustTalk.Toolbar.Title2"
                 android:layout_margin="4dp"
-                app:title="Raghav"
                 />
         </com.google.android.material.appbar.AppBarLayout>
 
