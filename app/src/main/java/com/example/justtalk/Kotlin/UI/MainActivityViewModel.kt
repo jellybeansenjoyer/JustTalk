@@ -1,5 +1,6 @@
 package com.example.justtalk.Kotlin.UI
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.example.justtalk.Kotlin.models.Message
 import com.example.justtalk.Kotlin.models.User
 import com.google.firebase.auth.FirebaseUser
 
+private const val TAG = "MainActivityViewModel"
 class MainActivityViewModel : ViewModel() {
 
     private val _mUser: MutableLiveData<User> = MutableLiveData()
@@ -54,6 +56,7 @@ class MainActivityViewModel : ViewModel() {
     }
     fun setListOfFriends(list:ArrayList<User>){
         _listOfFriends.value = list
+        Log.e(TAG,"list of friends called+${list.size} ")
     }
 
     fun setListOfRequests(list:ArrayList<User>){

@@ -22,11 +22,13 @@ import com.google.firebase.ktx.Firebase
 
 class TalkFragment : Fragment() {
     lateinit private var mBinding : FragmentTalkBinding
-    lateinit private var mRoom : DatabaseReference
+    lateinit private var mRoom : DatabaseReference  //Reference to messsage room
     private val mModel : MainActivityViewModel by activityViewModels()
-    lateinit private var mUser: User
-    lateinit private var mChat : ChatRef
+
+    lateinit private var mUser: User  //Current User
+    lateinit private var mChat : ChatRef //Current Reference to Chat
     private var listOfMessages = ArrayList<Message>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mUser = mModel.mUser.value!!
@@ -101,16 +103,13 @@ class TalkFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        mModel.setListOfFriends(ArrayList())
 
     }
     override fun onPause() {
         super.onPause()
-        mModel.setListOfFriends(ArrayList())
 
     }
     override fun onDestroy() {
         super.onDestroy()
-        mModel.setListOfFriends(ArrayList())
     }
 }

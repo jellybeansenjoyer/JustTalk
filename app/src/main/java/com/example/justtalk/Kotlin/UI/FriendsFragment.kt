@@ -24,14 +24,17 @@ class FriendsFragment : Fragment(),ChatClickCallback {
     lateinit private var mReference: DatabaseReference
     private val model : MainActivityViewModel by activityViewModels()
     lateinit private var mUser : User
-    private val listOfRequestsUser:ArrayList<User> = ArrayList()
+    private var listOfRequestsUser:ArrayList<User> = ArrayList()
     private val listOfRequests:ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mUser = model.mUser.value!!
         mReference = Firebase.database.reference.child("Users")
-        createList()
+        if(model.listOfRequests.value==null)
+            createList()
+        else
+            listOfRequestsUser = model.listOfRequests.value!!
     }
 
     override fun onCreateView(
@@ -59,32 +62,59 @@ class FriendsFragment : Fragment(),ChatClickCallback {
     }
 
     fun createList(){
-        Firebase.database.reference.child("RequestRoom/${mUser.id!!}/friends").orderByValue().addValueEventListener(object:
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(object: GenericTypeIndicator<HashMap<String, String>>(){})?.let{
-                    it.values.forEach {
-                        Firebase.database.reference.child("Users").orderByKey().equalTo(it).addValueEventListener(
-                            object:ValueEventListener{
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    snapshot.getValue(object: GenericTypeIndicator<HashMap<String, User>>(){})?.let{
-                                        it.values.forEach {
-                                            listOfRequestsUser.add(it)
-                                        }
-                                        model.setListOfRequests(listOfRequestsUser)
+        Firebase.database.reference.child("RequestRoom/${mUser.id!!}/friends").addChildEventListener(object:ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                snapshot.getValue(String::class.java)?.let{
+                    Firebase.database.reference.child("Users").orderByKey().equalTo(it).addValueEventListener(
+                        object:ValueEventListener{
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                snapshot.getValue(object: GenericTypeIndicator<HashMap<String, User>>(){})?.let{
+                                    it.values.forEach {
+                                        listOfRequestsUser.add(it)
                                     }
-                                }
-                                override fun onCancelled(error: DatabaseError) {
+                                    model.setListOfRequests(listOfRequestsUser)
                                 }
                             }
-                        )
-                    }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                    })
                 }
+            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
             }
             override fun onCancelled(error: DatabaseError) {
             }
-
         })
+//        Firebase.database.reference.child("RequestRoom/${mUser.id!!}/friends").orderByValue().addValueEventListener(object:
+//            ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                snapshot.getValue(object: GenericTypeIndicator<HashMap<String, String>>(){})?.let{
+//                    it.values.forEach {
+//                        Firebase.database.reference.child("Users").orderByKey().equalTo(it).addValueEventListener(
+//                            object:ValueEventListener{
+//                                override fun onDataChange(snapshot: DataSnapshot) {
+//                                    snapshot.getValue(object: GenericTypeIndicator<HashMap<String, User>>(){})?.let{
+//                                        it.values.forEach {
+//                                            listOfRequestsUser.add(it)
+//                                        }
+//                                        model.setListOfRequests(listOfRequestsUser)
+//                                    }
+//                                }
+//                                override fun onCancelled(error: DatabaseError) {
+//                                }
+//                            }
+//                        )
+//                    }
+//                }
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//            }
+//
+//        })
     }
 
     override fun onClick(user: User, view: View) {

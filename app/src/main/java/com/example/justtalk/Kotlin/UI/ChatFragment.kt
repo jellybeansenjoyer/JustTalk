@@ -30,8 +30,8 @@ class ChatFragment() : Fragment(), ChatClickCallback {
     lateinit private var mBinding:FragmentChatBinding
     private val mViewModel:MainActivityViewModel by activityViewModels()
     lateinit private var mUser:User
-    private var listOfPeople = ArrayList<User>()
-    lateinit private var mReference : DatabaseReference
+    private var listOfPeople = ArrayList<User>() //List of Chats
+    lateinit private var mReference : DatabaseReference //User info database
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,8 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         if(mViewModel.listOfFriends.value==null)
             createList()
         else{
-            listOfPeople =  mViewModel.listOfFriends.value!!
+           listOfPeople =  mViewModel.listOfFriends.value!!
+            Log.e(TAG+223,listOfPeople.size.toString())
         }
     }
 
@@ -71,7 +72,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
             val adapter = ChatListAdapter(this)
                 mViewModel.listOfFriends.observe(requireActivity()){
                     adapter.submitList(listOfPeople)
-                    Log.e(TAG,listOfPeople.size.toString())
+                    Log.e(TAG+"size of list became",it.size.toString())
                 }
                 mBinding.recyclerViewChat.apply{
                     this.adapter = adapter
