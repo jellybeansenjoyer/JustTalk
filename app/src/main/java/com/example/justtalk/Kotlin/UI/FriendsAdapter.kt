@@ -20,7 +20,7 @@ import com.google.firebase.ktx.Firebase
 
 private const val TAG = "FriendsAdapter"
 class FriendsAdapter(private val currentUser:User,private val clickedUserListener:ChatClickCallback) : RecyclerView.Adapter<FriendsAdapter.FriendsListViewHolder>(),CancelTapped {
-    lateinit private var mReference: DatabaseReference
+     private var mReference: DatabaseReference
     private var oldList:ArrayList<User> = ArrayList()
     init{
         mReference = Firebase.database.reference.child("RequestRoom")
@@ -38,18 +38,21 @@ class FriendsAdapter(private val currentUser:User,private val clickedUserListene
 
             mBinding.cancelRequest.setOnClickListener{
                 chatClickCallback.onClick(user,view,false)
-//                cancelListener.cancelledRequest(user)
+                cancelListener.cancelledRequest(user)
             }
             mBinding.friendAccept.setOnClickListener {
                 cancelListener.cancelledRequest(user)
                 chatClickCallback.onClick(user,view,true)
             }
         }
-
         companion object{
             public fun getInstance(parent: ViewGroup, cancelListener: CancelTapped,chatClickCallback: ChatClickCallback):FriendsListViewHolder{
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.friend_accept_view,parent,false)
                 return FriendsListViewHolder(view,parent,cancelListener,chatClickCallback =chatClickCallback)
+            }
+
+            fun <T> list(list:ArrayList<T>,obj:T){
+                list.remove(obj)
             }
         }
     }
@@ -84,20 +87,8 @@ class FriendsAdapter(private val currentUser:User,private val clickedUserListene
     }
 
     override fun cancelledRequest(user: User) {
+        this.notifyItemRemoved(oldList.indexOf(user))
         oldList.remove(user)
-        mReference.child("${user.id}/friends/").orderByValue().equalTo(currentUser.id).addValueEventListener(object:ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                   snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let{
-                       val map = it
-                       map.entries.forEach{
-                           mReference.child("${user.id}/friends/${currentUser.id}").setValue(null)
-
-                       }
-                   }
-            }
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
     }
 }
 

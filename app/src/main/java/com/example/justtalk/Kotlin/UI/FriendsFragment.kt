@@ -133,8 +133,8 @@ class FriendsFragment : Fragment(),ChatClickCallback {
 
         //Removing Item when it is accepted
         listOfRequestsUser.remove(user)
-        model.setListOfRequests(listOfRequestsUser)
-        mAdapter.notifyItemRemoved(listOfRequestsUser.indexOf(user))
+          model.setListOfRequests(listOfRequestsUser)
+//        mAdapter.notifyItemRemoved(listOfRequestsUser.indexOf(user))
 
         if(yesNo) {
             val ref = Firebase.database.reference

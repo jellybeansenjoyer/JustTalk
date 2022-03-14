@@ -13,6 +13,7 @@ import com.example.justtalk.Kotlin.models.Parcel
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.ActivityMainBinding
+import com.example.justtalk.test.RecyclerViewRemoveIt
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-
+        makeTransactions(RecyclerViewRemoveIt::class)
+        return
         if(savedInstanceState==null){
             mBinding.tabLayout.selectTab(mBinding.tabLayout.getTabAt(0))
             makeTransactions(ChatFragment::class)
