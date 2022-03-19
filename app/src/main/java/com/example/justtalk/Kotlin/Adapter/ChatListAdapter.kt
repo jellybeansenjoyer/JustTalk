@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 class ChatListAdapter(private val mListener: ChatClickCallback) : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
     private var oldList:List<User> = emptyList()
@@ -29,13 +31,18 @@ class ChatListAdapter(private val mListener: ChatClickCallback) : RecyclerView.A
     }
     class ChatViewHolder(private val view: View,private val context: Context,private val mListener: ChatClickCallback):RecyclerView.ViewHolder(view){
         private var mBinding : ModelChatBinding
-
+        lateinit private var mStorage: StorageReference
         init{
             mBinding = DataBindingUtil.bind(view)!!
+            mStorage = Firebase.storage.reference
         }
 
         fun bind(user:User){
-               Glide.with(context).load(user.dp).into(mBinding.dpUser)
+               mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener {
+                   if(it.isComplete){
+                       Glide.with(context).load(it.result).into(mBinding.dpUser)
+                   }
+               }
                mBinding.nameUser.setText(user.name)
                mBinding.card.setOnClickListener{
                    mListener.onClick(user,view,false)

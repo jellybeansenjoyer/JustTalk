@@ -3,6 +3,7 @@ package com.example.justtalk.Kotlin.UI
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
+import android.net.Uri
 import android.os.Bundle
 import android.provider.LiveFolders.INTENT
 import androidx.fragment.app.Fragment
@@ -27,6 +28,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 private const val TAG = "InfoFragment"
 private const val PICK_IMAGE = 123
@@ -34,20 +37,23 @@ class InfoFragment() : Fragment() {
     private var fbuser: FirebaseUser?=null
     lateinit private var key:String
     private val model : AuthViewModel by activityViewModels()
-
+    lateinit private var mStorage : StorageReference
     private var registry: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),object:ActivityResultCallback<ActivityResult>{
         override fun onActivityResult(result: ActivityResult?) {
             if(result!!.resultCode== RESULT_OK){
-                image = result.data!!.data.toString()
-                Glide.with(requireActivity()).load(image).into(mBinding.userProfile)
+                val imageUri = result.data!!.data!!
+                mStorage.child("UserDP/${fbuser!!.uid}.jpg").putFile(imageUri)
+                image = imageUri
+                Glide.with(requireActivity()).load(image.toString()).into(mBinding.userProfile)
             }
         }
     })
     lateinit private var mBinding : FragmentInfoBinding
-    private var image: String? =null
+    private var image: Uri? =null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fbuser = Firebase.auth.currentUser!!
+        mStorage = Firebase.storage.reference
     }
 
     override fun onCreateView(
@@ -68,6 +74,7 @@ class InfoFragment() : Fragment() {
             val name = mBinding.nameFieldEditText.text.toString()
             if(!name.isEmpty()){
                 pushToDatabase(name)
+
                 (activity as AuthActivity).apply {
                     makeTransaction(FindFriendsFragment::class,null,"replace")
                     getUserAndUpdateVM(fbuser,false)
@@ -95,10 +102,11 @@ class InfoFragment() : Fragment() {
         val name = mName
         val uid = fbuser!!.uid
         val email = fbuser!!.email.toString()
-        val dp:String = image!!
+        val dp:String = image.toString()
         val mUser = User(id=id,name=name,uid=uid,email=email,dp=dp)
         model.setUserKey(key)
         model.setUserValue(mUser)
         mReference.updateChildren(hashMapOf(Pair<String,Any>(key,mUser)))
+        mStorage.putFile(image!!)
     }
 }

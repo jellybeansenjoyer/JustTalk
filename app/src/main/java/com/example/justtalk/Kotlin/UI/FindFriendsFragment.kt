@@ -74,9 +74,10 @@ class FindFriendsFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val type = object : GenericTypeIndicator<HashMap<String, User>>() {}
                 val result = snapshot.getValue(type)!!
-                Log.e(TAG,result.size.toString())
                 result.entries.forEach {
-                    list.add(it.value)
+                    if(!it.value.id.equals(mUser.id))
+                        list.add(it.value)
+
                 }
                     model.setList(list)
             }

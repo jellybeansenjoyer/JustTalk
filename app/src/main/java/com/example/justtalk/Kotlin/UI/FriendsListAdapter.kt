@@ -12,20 +12,27 @@ import com.example.justtalk.Kotlin.Adapter.FriendListAddFriendListener
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FriendViewBinding
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 private const val TAG = "FriendsListAdapter"
 class FriendsListAdapter(private val requestListener:FriendListAddFriendListener) : RecyclerView.Adapter<FriendsListAdapter.FriendsViewHolder>() {
     private var oldList:List<User> = emptyList()
     class FriendsViewHolder(private val view: View,private val parent:ViewGroup,private val requestListener: FriendListAddFriendListener) : RecyclerView.ViewHolder(view){
         private var mBinding: FriendViewBinding
-
+        lateinit private var mStorage : StorageReference
         init {
             mBinding = DataBindingUtil.bind(view)!!
+            mStorage = Firebase.storage.reference
         }
         fun bind(user:User){
             mBinding.nameUser.setText(user.name)
-            Log.e(TAG,user.dp.toString())
-            Glide.with(parent.context).load(user.dp).into(mBinding.userPhoto)
+            mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener{
+                if(it.isComplete){
+                    Glide.with(parent.context).load(it.result).into(mBinding.userPhoto)
+                }
+            }
             mBinding.taptobefriend.setOnClickListener{
                 Log.e(TAG,user.dp.toString())
                 requestListener.sendRequest(user)

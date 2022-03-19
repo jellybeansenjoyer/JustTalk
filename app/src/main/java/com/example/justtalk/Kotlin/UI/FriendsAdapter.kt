@@ -17,6 +17,8 @@ import com.example.justtalk.databinding.FriendViewBinding
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 private const val TAG = "FriendsAdapter"
 class FriendsAdapter(private val currentUser:User,private val clickedUserListener:ChatClickCallback) : RecyclerView.Adapter<FriendsAdapter.FriendsListViewHolder>(),CancelTapped {
@@ -27,15 +29,19 @@ class FriendsAdapter(private val currentUser:User,private val clickedUserListene
     }
     class FriendsListViewHolder(private val view: View, private val parent: ViewGroup, private val cancelListener: CancelTapped,private val chatClickCallback: ChatClickCallback) : RecyclerView.ViewHolder(view){
         private var mBinding: FriendAcceptViewBinding
-
+        private var mStorage: StorageReference
         init {
             mBinding = DataBindingUtil.bind(view)!!
+            mStorage = Firebase.storage.reference
         }
 
         fun bind(user: User){
             mBinding.nameUser.setText(user.name)
-            Glide.with(parent.context).load(user.dp).into(mBinding.userPhoto)
-
+            mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener {
+                if(it.isComplete){
+                    Glide.with(parent.context).load(it.result).into(mBinding.userPhoto)
+                }
+            }
             mBinding.cancelRequest.setOnClickListener{
                 chatClickCallback.onClick(user,view,false)
                 cancelListener.cancelledRequest(user)
