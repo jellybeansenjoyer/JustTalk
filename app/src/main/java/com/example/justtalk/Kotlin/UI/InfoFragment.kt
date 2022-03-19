@@ -34,6 +34,7 @@ class InfoFragment() : Fragment() {
     private var fbuser: FirebaseUser?=null
     lateinit private var key:String
     private val model : AuthViewModel by activityViewModels()
+
     private var registry: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),object:ActivityResultCallback<ActivityResult>{
         override fun onActivityResult(result: ActivityResult?) {
             if(result!!.resultCode== RESULT_OK){
