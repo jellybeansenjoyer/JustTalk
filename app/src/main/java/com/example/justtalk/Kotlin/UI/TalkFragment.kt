@@ -23,6 +23,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 class TalkFragment : Fragment() {
     lateinit private var mBinding : FragmentTalkBinding
@@ -33,6 +35,7 @@ class TalkFragment : Fragment() {
     lateinit private var mChat : ChatRef //Current Reference to Chat
     private var listOfMessages = ArrayList<Message>()
     lateinit private var mEndUser: User
+    lateinit private var mStorage : StorageReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +53,6 @@ class TalkFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_talk,container,false)
-
         return mBinding.root
     }
 
@@ -108,6 +110,12 @@ class TalkFragment : Fragment() {
                 snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let {
                     it.values.forEach {
                         mEndUser = it
+                        mStorage = Firebase.storage.reference.child("UserDP/${it.uid}.jpg")
+                        mStorage.downloadUrl.addOnCompleteListener {
+                            if(it.isComplete){
+                                Glide.with(requireContext()).load(it.result).into(mBinding.dpToolbar)
+                            }
+                        }
                         Glide.with(this@TalkFragment.context!!).load(mUser.dp).into(mBinding.dpToolbar)
                         mBinding.toolbar.setTitle(it.name)
 
