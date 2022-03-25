@@ -21,18 +21,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
-class MessageThreadAdapter(private var mEndUser: User) : RecyclerView.Adapter<MessageThreadAdapter.MessageViewHolder>() {
+class MessageThreadAdapter(private var mEndUser: User,private var mUser:User) : RecyclerView.Adapter<MessageThreadAdapter.MessageViewHolder>() {
     private var oldList: List<Message> = emptyList()
-    class MessageViewHolder(private val view: View,private val flag:Int,private var mEndUser: User,private val mContext:Context) : RecyclerView.ViewHolder(view) {
+    class MessageViewHolder(private val view: View,private val flag:Int,private var mEndUser: User,private val mContext:Context,var mUser:User) : RecyclerView.ViewHolder(view) {
         lateinit private var mBinding: ViewDataBinding
+        lateinit private var mStorage : StorageReference
         lateinit private var mImage: Uri
         init {
-            Firebase.storage.reference.child("UserDP/${mEndUser.uid}.jpg").downloadUrl.addOnCompleteListener {
-                if(it.isComplete){
-                    mImage = it.result
-                }
-            }
-
+            mStorage = Firebase.storage.reference.child("UserDP")
             when(flag){
                 0 ->{
                     mBinding = DataBindingUtil.bind<ModelMessageBinding>(view)!!
@@ -49,14 +45,21 @@ class MessageThreadAdapter(private var mEndUser: User) : RecyclerView.Adapter<Me
                  0->{
                      (mBinding as ModelMessageBinding).run{
                          this.message.setText(message.content)
+                         mStorage.child("${mEndUser.uid}.jpg").downloadUrl.addOnCompleteListener {
+                             if(it.isComplete){
+                                 Glide.with(mContext).load(it.result).into(this.userDp)
+                             }
+                         }
                      }
 
                  }
                  1->{
                      (mBinding as EndUserMessageModelBinding).run{
                          this.message.setText(message.content)
-                         if(::mImage.isInitialized){
-
+                         mStorage.child("${mUser.uid}.jpg").downloadUrl.addOnCompleteListener {
+                             if(it.isComplete){
+                                 Glide.with(mContext).load(it.result).into(this.userDp)
+                             }
                          }
                      }
                  }
@@ -65,7 +68,7 @@ class MessageThreadAdapter(private var mEndUser: User) : RecyclerView.Adapter<Me
 
         companion object {
             @JvmStatic
-            fun getInstance(parent: ViewGroup,flag:Int,mEndUser: User,context:Context): MessageViewHolder {
+            fun getInstance(parent: ViewGroup,flag:Int,mEndUser: User,context:Context,mUser:User): MessageViewHolder {
                 var view:View?=null
                 when(flag){
                         1->{
@@ -77,13 +80,13 @@ class MessageThreadAdapter(private var mEndUser: User) : RecyclerView.Adapter<Me
                                 .inflate(R.layout.model_message, parent, false)
                         }
                 }
-                return MessageViewHolder(view!!,flag,mEndUser,context)
+                return MessageViewHolder(view!!,flag,mEndUser,context,mUser = mUser)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        return MessageViewHolder.getInstance(parent,viewType,mEndUser,parent.context)
+        return MessageViewHolder.getInstance(parent,viewType,mEndUser,parent.context,mUser)
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {

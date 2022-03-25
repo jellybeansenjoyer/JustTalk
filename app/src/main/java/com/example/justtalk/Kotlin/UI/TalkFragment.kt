@@ -95,7 +95,7 @@ class TalkFragment : Fragment() {
         })
     }
     fun setUpAdapter(){
-        mAdapter = MessageThreadAdapter(mEndUser)
+        mAdapter = MessageThreadAdapter(mEndUser,mUser)
         mModel._messageList.observe(requireActivity()){
             mAdapter.submitList(it)
         }
