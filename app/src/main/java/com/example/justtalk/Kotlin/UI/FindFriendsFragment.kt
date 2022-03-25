@@ -13,6 +13,8 @@ import com.example.justtalk.Kotlin.Adapter.FriendListAddFriendListener
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentFindFriendsBinding
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -25,6 +27,7 @@ class FindFriendsFragment : Fragment() {
     lateinit private var mReference: DatabaseReference
     lateinit private var mReqReference: DatabaseReference
     lateinit private var mUser: User
+    lateinit private var mCurrentUser : FirebaseUser
     private var listOfPeople  = ArrayList<User>()
     private val model : AuthViewModel by activityViewModels()
     private val mViewModel : MainActivityViewModel by activityViewModels()
@@ -37,6 +40,7 @@ class FindFriendsFragment : Fragment() {
             when(id){
                 0->{
                     mUser = model.mUser.value!!
+                    mCurrentUser = Firebase.auth.currentUser!!
                 }
                 1->{
                     mUser = mViewModel.mUser.value!!
@@ -51,6 +55,11 @@ class FindFriendsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_find_friends,container,false)
+        arguments?.let{
+            if(it.getInt("FindFriendsId")==1){
+                mBinding.continueToMain.visibility = View.INVISIBLE
+            }
+        }
         return mBinding.root
     }
 
@@ -63,6 +72,7 @@ class FindFriendsFragment : Fragment() {
 //                user.friendrefs!!.add(user.id!!)
                   val k = mReqReference.push().key
                   mReqReference.updateChildren(hashMapOf(Pair<String,Any>("${user.id!!}/friends/${k}",mUser.id!!)))
+
             }
         })
 
@@ -74,11 +84,13 @@ class FindFriendsFragment : Fragment() {
             this.adapter = mAdapter
             this.layoutManager = LinearLayoutManager(requireContext())
         }
+
         mBinding.continueToMain.setOnClickListener{
-            (activity as AuthActivity).transferData()
+            (activity as AuthActivity).apply{
+                getUserAndUpdateVM(mCurrentUser.uid,true)
+            }
         }
     }
-
 
     fun createList(list:ArrayList<User>){
         mReference.orderByKey().addValueEventListener(object : ValueEventListener{

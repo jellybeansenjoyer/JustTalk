@@ -36,6 +36,7 @@ private const val PICK_IMAGE = 123
 class InfoFragment() : Fragment() {
     private var fbuser: FirebaseUser?=null
     lateinit private var key:String
+    lateinit private var password:String
     private val model : AuthViewModel by activityViewModels()
     lateinit private var mStorage : StorageReference
     private var registry: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),object:ActivityResultCallback<ActivityResult>{
@@ -54,6 +55,9 @@ class InfoFragment() : Fragment() {
         super.onCreate(savedInstanceState)
         fbuser = Firebase.auth.currentUser!!
         mStorage = Firebase.storage.reference
+        arguments?.let{
+            password = it.getString("InfoId")!!
+        }
     }
 
     override fun onCreateView(
@@ -68,18 +72,21 @@ class InfoFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val auth = Firebase.auth.currentUser!!
-        val fbuser = auth.uid
+        val fbuserId = auth.uid
         mBinding.createButton.setOnClickListener{
             //FindFriendsActivity
             val name = mBinding.nameFieldEditText.text.toString()
             if(!name.isEmpty()){
                 pushToDatabase(name)
-
-                (activity as AuthActivity).apply {
-                    val bundle = Bundle()
-                    bundle.putInt("FindFriendsId",0)
-                    makeTransaction(FindFriendsFragment::class,bundle,"replace")
-                    getUserAndUpdateVM(fbuser,false)
+                Firebase.auth.signInWithEmailAndPassword(fbuser!!.email!!,password).addOnCompleteListener {
+                    if (it.isSuccessful){
+                        (activity as AuthActivity).apply {
+                            val bundle = Bundle()
+                            bundle.putInt("FindFriendsId",0)
+                            makeTransaction(FindFriendsFragment::class,bundle,"replace")
+                            getUserAndUpdateVM(fbuserId,false)
+                        }
+                    }
                 }
             } else
                 Toast.makeText(requireContext(), "name is required", Toast.LENGTH_SHORT).show()
@@ -111,4 +118,5 @@ class InfoFragment() : Fragment() {
         mReference.updateChildren(hashMapOf(Pair<String,Any>(key,mUser)))
         mStorage.putFile(image!!)
     }
+
 }

@@ -18,6 +18,8 @@ import com.example.justtalk.Kotlin.models.Message
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentTalkBinding
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -39,6 +41,7 @@ class TalkFragment : Fragment() {
         getEndUser(mChat.freindId!!)
         mModel.setMessageList(ArrayList())
         mRoom = Firebase.database.reference.child("MessageRoom/${mChat.chatRoomId}/")
+        (activity as MainActivity).findViewById<AppBarLayout>(R.id.appbar).visibility = View.GONE
     }
 
     override fun onCreateView(
@@ -131,4 +134,8 @@ class TalkFragment : Fragment() {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as MainActivity).findViewById<AppBarLayout>(R.id.appbar).visibility = View.VISIBLE
+    }
 }

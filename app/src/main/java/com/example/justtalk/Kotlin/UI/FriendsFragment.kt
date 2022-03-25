@@ -56,9 +56,6 @@ class FriendsFragment : Fragment(),ChatClickCallback {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = mAdapter
         }
-        mBinding.moveToMain.setOnClickListener{
-            (activity as MainActivity).makeTransactions(ChatFragment::class,null)
-        }
     }
 
     fun createList(){

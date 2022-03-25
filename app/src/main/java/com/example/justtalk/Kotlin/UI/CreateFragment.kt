@@ -44,7 +44,10 @@ class CreateFragment : Fragment() {
                  if(pass.equals(confirmpass)){
                     mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener {
                         if(it.isSuccessful){
-                            (activity as AuthActivity).makeTransaction(InfoFragment::class,null,"replace")
+                                val bundle = Bundle()
+                                bundle.putString("InfoId",pass)
+                                (activity as AuthActivity).makeTransaction(InfoFragment::class,bundle,"replace")
+
                         }else{
                             Toast.makeText(requireActivity(), "User Creation Failed", Toast.LENGTH_SHORT).show()
                         }
