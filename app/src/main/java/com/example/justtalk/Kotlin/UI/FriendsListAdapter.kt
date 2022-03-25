@@ -37,7 +37,7 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
                 requestListener.sendRequest(user)
                 it.visibility = View.INVISIBLE
             }
-            view.setBackgroundColor(android.R.color.darker_gray)
+            view.setBackgroundColor(parent.context.resources.getColor(android.R.color.darker_gray))
         }
 
         companion object{
