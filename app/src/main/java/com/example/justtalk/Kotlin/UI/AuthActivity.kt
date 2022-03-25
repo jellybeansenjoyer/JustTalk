@@ -53,11 +53,11 @@ class AuthActivity : AppCompatActivity(),
         mAuth = Firebase.auth
         var fUserId:String? = null
         mAuth.signOut()
-        if(mAuth.currentUser!=null){
-            fUser = mAuth.currentUser!!
-            fUserId = fUser.uid
-            getUserAndUpdateVM(mAuth.currentUser!!.uid,true)
-        }
+//        if(mAuth.currentUser!=null){
+//            fUser = mAuth.currentUser!!
+//            fUserId = fUser.uid
+//            getUserAndUpdateVM(mAuth.currentUser!!.uid,true)
+//        }
 
     if(savedInstanceState==null)
          makeTransaction(LoginFragment::class,null,"add")

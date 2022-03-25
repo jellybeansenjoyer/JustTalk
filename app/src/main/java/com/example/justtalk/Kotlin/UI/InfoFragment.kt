@@ -76,7 +76,9 @@ class InfoFragment() : Fragment() {
                 pushToDatabase(name)
 
                 (activity as AuthActivity).apply {
-                    makeTransaction(FindFriendsFragment::class,null,"replace")
+                    val bundle = Bundle()
+                    bundle.putInt("FindFriendsId",0)
+                    makeTransaction(FindFriendsFragment::class,bundle,"replace")
                     getUserAndUpdateVM(fbuser,false)
                 }
             } else

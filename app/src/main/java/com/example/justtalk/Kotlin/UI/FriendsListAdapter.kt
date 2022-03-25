@@ -34,9 +34,10 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
                 }
             }
             mBinding.taptobefriend.setOnClickListener{
-                Log.e(TAG,user.dp.toString())
                 requestListener.sendRequest(user)
+                it.visibility = View.INVISIBLE
             }
+            view.setBackgroundColor(android.R.color.darker_gray)
         }
 
         companion object{
@@ -75,4 +76,5 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
         oldList = newList
         calc.dispatchUpdatesTo(this)
         }
+
 }

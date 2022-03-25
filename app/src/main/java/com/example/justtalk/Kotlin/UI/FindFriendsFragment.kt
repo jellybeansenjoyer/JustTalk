@@ -27,12 +27,22 @@ class FindFriendsFragment : Fragment() {
     lateinit private var mUser: User
     private var listOfPeople  = ArrayList<User>()
     private val model : AuthViewModel by activityViewModels()
-
+    private val mViewModel : MainActivityViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mReference  = Firebase.database.reference.child("Users")
         mReqReference = Firebase.database.reference.child("RequestRoom")
-        mUser = model.mUser.value!!
+        arguments?.let{
+            val id = it.getInt("FindFriendsId")
+            when(id){
+                0->{
+                    mUser = model.mUser.value!!
+                }
+                1->{
+                    mUser = mViewModel.mUser.value!!
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -47,7 +57,6 @@ class FindFriendsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createList(listOfPeople)
-        Log.e(TAG+"22",listOfPeople.size.toString())
 
         val mAdapter = FriendsListAdapter(object: FriendListAddFriendListener{
             override fun sendRequest(user: User) {
@@ -69,6 +78,8 @@ class FindFriendsFragment : Fragment() {
             (activity as AuthActivity).transferData()
         }
     }
+
+
     fun createList(list:ArrayList<User>){
         mReference.orderByKey().addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -77,7 +88,6 @@ class FindFriendsFragment : Fragment() {
                 result.entries.forEach {
                     if(!it.value.id.equals(mUser.id))
                         list.add(it.value)
-
                 }
                     model.setList(list)
             }

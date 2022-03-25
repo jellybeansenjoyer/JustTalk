@@ -55,7 +55,9 @@ class MainActivity : AppCompatActivity() {
                         makeTransactions(FriendsFragment::class)
                     }
                     "REQUESTS"->{
-                        makeTransactions(FindFriendsFragment::class)
+                        val bundle = Bundle()
+                        bundle.putInt("FindFriendsId",1)
+                        makeTransactions(FindFriendsFragment::class,bundle)
                     }
                 }
             }

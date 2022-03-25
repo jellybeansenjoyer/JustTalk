@@ -37,12 +37,10 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         super.onCreate(savedInstanceState)
         mUser = mViewModel.mUser.value!!
         mReference = Firebase.database.reference.child("Users")
-        Log.e(TAG,"onCreate called")
         if(mViewModel.listOfFriends.value==null)
             createList()
         else{
            listOfPeople =  mViewModel.listOfFriends.value!!
-            Log.e(TAG+223,listOfPeople.size.toString())
         }
     }
 
@@ -51,7 +49,6 @@ class ChatFragment() : Fragment(), ChatClickCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        Log.e(TAG,"onCreateView called")
 
         val view = LayoutInflater.from(activity).inflate(R.layout.fragment_chat,container,false)
         mBinding = DataBindingUtil.bind(view)!!
@@ -67,12 +64,10 @@ class ChatFragment() : Fragment(), ChatClickCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e(TAG,"onViewCreated called")
 
             val adapter = ChatListAdapter(this)
                 mViewModel.listOfFriends.observe(requireActivity()){
                     adapter.submitList(listOfPeople)
-                    Log.e(TAG+"size of list became",it.size.toString())
                 }
                 mBinding.recyclerViewChat.apply{
                     this.adapter = adapter
