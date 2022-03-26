@@ -15,6 +15,7 @@ import com.example.justtalk.Kotlin.models.Parcel
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.ActivityMainBinding
+import com.example.justtalk.test.AnimationTestFragment
 import com.example.justtalk.test.FirebaseStorageTest
 import com.example.justtalk.test.RecyclerViewRemoveIt
 import com.google.android.material.tabs.TabLayout
@@ -42,6 +43,8 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(R.color.marine_green)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        makeTransactions(AnimationTestFragment::class)
+        return
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
         if(savedInstanceState==null){
