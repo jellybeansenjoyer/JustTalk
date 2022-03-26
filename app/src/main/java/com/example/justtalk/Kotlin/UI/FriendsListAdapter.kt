@@ -30,7 +30,7 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
             mBinding.nameUser.setText(user.name)
             mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener{
                 if(it.isComplete){
-                    Glide.with(parent.context).load(it.result).into(mBinding.userPhoto)
+                    Glide.with(parent.context.applicationContext).load(it.result).into(mBinding.userPhoto)
                 }
             }
             mBinding.taptobefriend.setOnClickListener{

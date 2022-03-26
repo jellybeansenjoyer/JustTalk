@@ -40,7 +40,7 @@ class ChatListAdapter(private val mListener: ChatClickCallback) : RecyclerView.A
         fun bind(user:User){
                mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener {
                    if(it.isComplete){
-                       Glide.with(context).load(it.result).into(mBinding.dpUser)
+                       Glide.with(context.applicationContext).load(it.result).into(mBinding.dpUser)
                    }
                }
                mBinding.nameUser.setText(user.name)

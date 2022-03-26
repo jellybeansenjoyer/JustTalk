@@ -39,7 +39,7 @@ class FriendsAdapter(private val currentUser:User,private val clickedUserListene
             mBinding.nameUser.setText(user.name)
             mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener {
                 if(it.isComplete){
-                    Glide.with(parent.context).load(it.result).into(mBinding.userPhoto)
+                    Glide.with(parent.context.applicationContext).load(it.result).into(mBinding.userPhoto)
                 }
             }
             mBinding.cancelRequest.setOnClickListener{
