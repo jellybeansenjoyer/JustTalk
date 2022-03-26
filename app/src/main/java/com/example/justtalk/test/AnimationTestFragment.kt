@@ -1,5 +1,6 @@
 package com.example.justtalk.test
 
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.os.Bundle
@@ -44,7 +45,10 @@ class AnimationTestFragment : Fragment() {
             repeatCount = 1
             repeatMode = ObjectAnimator.REVERSE
         }
-
+        val animSet = AnimatorSet().apply {
+            play(alphaAnim).after(transAnim)
+            play(transAnim).after(rotatAnim)
+        }
         mBinding.alpha.setOnClickListener {
             alphaAnim.start()
         }
@@ -53,6 +57,9 @@ class AnimationTestFragment : Fragment() {
         }
         mBinding.rotate.setOnClickListener {
             rotatAnim.start()
+        }
+        mBinding.scale.setOnClickListener {
+            animSet.start()
         }
     }
 }
