@@ -4,6 +4,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal">
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="As ObjectAnimator?" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/alpha"
                 android:layout_width="wrap_content"
@@ -20,10 +26,10 @@
                 android:layout_height="wrap_content"
                 android:text="rotate"/>
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/scale"
+                android:id="@+id/set"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="scale"/>
+                android:text="set"/>
 
     </LinearLayout>
 </layout>
