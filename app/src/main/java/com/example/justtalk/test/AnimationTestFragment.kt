@@ -1,15 +1,15 @@
 package com.example.justtalk.test
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
-import android.animation.ValueAnimator
+import android.animation.*
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.view.animation.BounceInterpolator
+import android.view.animation.LinearInterpolator
 import androidx.databinding.DataBindingUtil
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentAnimationTestBinding
@@ -29,17 +29,43 @@ class AnimationTestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.set.setOnClickListener {
-            when{
-                mBinding.checkBox.isChecked ->{
-                    objectAnim()
-                }
-                else->{
-                    valueAnim()
-                }
+//        mBinding.set.setOnClickListener {
+//            when{
+//                mBinding.checkBox.isChecked ->{
+//                    objectAnim()
+//                }
+//                else->{
+//                    valueAnim()
+//                }
+//            }
+//        }
+        mBinding.keyframe.setOnClickListener {
+            val propx = PropertyValuesHolder.ofFloat(View.SCALE_X,mBinding.keyframe.scaleX*2)
+            val propy = PropertyValuesHolder.ofFloat(View.SCALE_Y,mBinding.keyframe.scaleY*2)
+            ObjectAnimator.ofPropertyValuesHolder(mBinding.keyframe,propx,propy).apply{
+                duration = 1000
+                interpolator = BounceInterpolator()
+                start()
             }
         }
-
+        mBinding.translateX.setOnClickListener {
+            ObjectAnimator.ofFloat(it,View.TRANSLATION_X,800f).apply{
+                duration = 1000
+                repeatCount =1
+                repeatMode = ObjectAnimator.REVERSE
+                when{
+                    mBinding.checkBox.isChecked ->{
+                        setInterpolator {
+                            Math.sin((it+1*Math.PI)/2.0f).toFloat() - .5f
+                        }
+                    }
+                    else->{
+                        interpolator = LinearInterpolator()
+                    }
+                }
+                start()
+            }
+        }
     }
 
     fun valueAnim(){

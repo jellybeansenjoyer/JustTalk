@@ -30,6 +30,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="set"/>
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/translateX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="move"
+                android:layout_gravity="left"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/keyframe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="keyFrame"
+                android:layout_gravity="left"/>
     </LinearLayout>
 </layout>
