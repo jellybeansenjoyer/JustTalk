@@ -10,6 +10,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
+import androidx.core.animation.addListener
 import androidx.databinding.DataBindingUtil
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentAnimationTestBinding
@@ -39,6 +40,15 @@ class AnimationTestFragment : Fragment() {
 //                }
 //            }
 //        }
+
+        mBinding.alpha.setOnClickListener {
+            (AnimatorInflater.loadAnimator(this.context,R.animator.alpha_anim) as ValueAnimator).apply {
+                addUpdateListener {
+                    mBinding.alpha.alpha = it.animatedValue as Float
+                }
+                start()
+            }
+        }
         mBinding.keyframe.setOnClickListener {
             val propx = PropertyValuesHolder.ofFloat(View.SCALE_X,mBinding.keyframe.scaleX*2)
             val propy = PropertyValuesHolder.ofFloat(View.SCALE_Y,mBinding.keyframe.scaleY*2)
