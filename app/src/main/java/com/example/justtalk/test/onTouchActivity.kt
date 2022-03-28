@@ -14,82 +14,108 @@ import com.example.justtalk.databinding.ActivityOnTouchBinding
 
 private const val TAG = "onTouchActivity"
 class onTouchActivity : AppCompatActivity() {
-    lateinit private var mBinding : ActivityOnTouchBinding
-    lateinit private var mGesture : GestureDetectorCompat
+    lateinit private var mBinding: ActivityOnTouchBinding
+    lateinit private var mGesture: GestureDetectorCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_on_touch)
-
-
-        mGesture = GestureDetectorCompat(this,object: GestureDetector.OnGestureListener{
-            override fun onDown(p0: MotionEvent?): Boolean {
-                Log.e(TAG,"onDown Called")
-                return true
-            }
-
-            override fun onShowPress(p0: MotionEvent?) {
-                Log.e(TAG,"onShowPress Called")
-            }
-
-            override fun onSingleTapUp(p0: MotionEvent?): Boolean {
-                Log.e(TAG,"onSingleTapUp Called")
-                return true
-            }
-
-            override fun onScroll(
-                p0: MotionEvent?,
-                p1: MotionEvent?,
-                p2: Float,
-                p3: Float
-            ): Boolean {
-                Log.e(TAG,"onScroll called")
-                return true
-            }
-
-            override fun onLongPress(p0: MotionEvent?) {
-                Log.e(TAG,"onLongPress Called")
-            }
-
-            override fun onFling(
-                p0: MotionEvent?,
-                p1: MotionEvent?,
-                p2: Float,
-                p3: Float
-            ): Boolean {
-                Log.e(TAG,"onFling Called")
-                return true
-            }
-
-        }).apply {
-            setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
-                override fun onSingleTapConfirmed(p0: MotionEvent?): Boolean {
-                    Log.e(TAG, "onSingleTapConfirmed Called")
-                    return true
-                }
-
-                override fun onDoubleTap(p0: MotionEvent?): Boolean {
-                    Log.e(TAG, "onDoubleTap Called")
-                    return true
-                }
-
-                override fun onDoubleTapEvent(p0: MotionEvent?): Boolean {
-                    Log.e(TAG, "onDoubleTapEvent Called")
-                    return true
-                }
-
-            })
-
-        }
-
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return if(mGesture.onTouchEvent(event)){
-            true
-        }else{
-            super.onTouchEvent(event)
+        event?.apply{
+            mBinding.testButton.x = x
+            mBinding.testButton.y = y
         }
+        return super.onTouchEvent(event)
     }
+}
+//
+//    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//        event?.apply{
+//            val pointerSize = pointerCount
+//            Log.e(TAG+"historysize",historySize.toString())
+//            for(p0 in 0..pointerSize-1){
+//                val p = getPointerId(p0)
+//                val x = getX(p)
+//                val y = getY(p)
+//                Log.e(TAG,"P:${p} X:${x} Y:${y} ${x==this.x}")
+//            }
+//        }
+//        return super.onTouchEvent(event)
+//    }
+//}
+//
+//        mGesture = GestureDetectorCompat(this,object: GestureDetector.OnGestureListener{
+//            override fun onDown(p0: MotionEvent?): Boolean {
+//                Log.e(TAG,"onDown Called")
+//                return true
+//            }
+//
+//            override fun onShowPress(p0: MotionEvent?) {
+//                Log.e(TAG,"onShowPress Called")
+//            }
+//
+//            override fun onSingleTapUp(p0: MotionEvent?): Boolean {
+//                Log.e(TAG,"onSingleTapUp Called")
+//                return true
+//            }
+//
+//            override fun onScroll(
+//                p0: MotionEvent?,
+//                p1: MotionEvent?,
+//                p2: Float,
+//                p3: Float
+//            ): Boolean {
+//                Log.e(TAG,"onScroll called X:${p2} Y:${p3} ")
+//                return true
+//            }
+//
+//            override fun onLongPress(p0: MotionEvent?) {
+//                Log.e(TAG,"onLongPress Called")
+//            }
+//
+//            override fun onFling(
+//                p0: MotionEvent?,
+//                p1: MotionEvent?,
+//                p2: Float,
+//                p3: Float
+//            ): Boolean {
+//                Log.e(TAG,"onFling Called Vx:${p2} Vy:${p3} ")
+//                return true
+//            }
+//
+//        }).apply {
+//            setOnDoubleTapListener(object : GestureDetector.OnDoubleTapListener {
+//                override fun onSingleTapConfirmed(p0: MotionEvent?): Boolean {
+//                    Log.e(TAG, "onSingleTapConfirmed Called")
+//                    return true
+//                }
+//
+//                override fun onDoubleTap(p0: MotionEvent?): Boolean {
+//                    Log.e(TAG, "onDoubleTap Called")
+//                    return true
+//                }
+//
+//                override fun onDoubleTapEvent(p0: MotionEvent?): Boolean {
+//                    Log.e(TAG, "onDoubleTapEvent Called")
+//                    return true
+//                }
+//
+//            })
+//
+//        }
+//
+//    }
+//
+//    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//
+//        val size = event!!.historySize
+//        return if(mGesture.onTouchEvent(event)){
+//            true
+//        }else{
+//            super.onTouchEvent(event)
+//        }
+//    }
 //    override fun onTouchEvent(event: MotionEvent?): Boolean {
 //        val mEvent = MotionEventCompat.getActionMasked(event)
 //        return when(mEvent){
@@ -115,4 +141,3 @@ class onTouchActivity : AppCompatActivity() {
 //        }
 //
 //    }
-}
