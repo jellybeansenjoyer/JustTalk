@@ -21,5 +21,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Lorem ipsum dolor sit amet. Est dignissimos error id iste corrupti  tenetur quas. Vel rerum eveniet qui consectetur enim ad voluptatibus consectetur est mollitia impedit sed quos dolorem ut debitis vero et quis porro! Qui enim quaerat et facere sint vel saepe praesentium non consequatur ipsam sit obcaecati tempora. Sit aperiam alias sit quis tenetur qui soluta esse est enim suscipit et repellendus enim ut asperiores quae et ipsum animi. Est molestiae adipisci quo unde voluptatibus et dolorem fuga in quia voluptate nam consequatur architecto non saepe earum nam recusandae neque. In quidem voluptatem et veniam velit eos deleniti exercitationem ad rerum excepturi. Ut sapiente blanditiis ut consequuntur enim quo dolorem dolor et facilis cupiditate. Sed natus dolorem cum sint consequuntur eum voluptatem quos eum sunt modi. Qui eaque nulla a possimus sequi et dolore magni aut nobis libero qui cupiditate illum et eveniet reprehenderit! Non saepe officia eos labore provident sit excepturi corporis ea obcaecati quia est nihil tempore et voluptas molestiae."
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

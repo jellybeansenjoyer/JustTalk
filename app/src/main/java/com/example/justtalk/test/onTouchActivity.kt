@@ -1,11 +1,14 @@
 package com.example.justtalk.test
 
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.animation.doOnEnd
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.MotionEventCompat
 import androidx.databinding.DataBindingUtil
@@ -20,7 +23,33 @@ class onTouchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_on_touch)
-        val d = AppCompatResources.getDrawable(this,R.drawable.ic_android_black_24dp)
+        val def_duration = resources.getInteger(android.R.integer.config_mediumAnimTime)
+        val f1:ObjectAnimator
+        val f2:ObjectAnimator
+        mBinding.content.apply{
+            //Visible But transparent Earlier : Was Gone
+            alpha = 0f
+            visibility = View.VISIBLE
+
+             f1 = ObjectAnimator.ofFloat(this,View.ALPHA,1f).apply{
+                    duration = def_duration.toLong()
+            }
+
+        }
+        mBinding.testButton.apply{
+             //Was Earlier VISIBLE now we want it to slowly fade and when completely 0 , is completely gone
+             f2 = ObjectAnimator.ofFloat(this,View.ALPHA,0f).apply{
+                duration = def_duration.toLong()
+            }.apply {
+                 doOnEnd {
+                     visibility = View.GONE
+                 }
+             }
+        }
+        mBinding.testButton.setOnClickListener {
+            f1.start()
+            f2.start()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -31,6 +60,8 @@ class onTouchActivity : AppCompatActivity() {
         return super.onTouchEvent(event)
     }
 }
+
+
 //
 //    override fun onTouchEvent(event: MotionEvent?): Boolean {
 //        event?.apply{
