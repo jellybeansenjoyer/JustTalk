@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.MotionEventCompat
 import androidx.databinding.DataBindingUtil
@@ -19,6 +20,7 @@ class onTouchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_on_touch)
+        val d = AppCompatResources.getDrawable(this,R.drawable.ic_android_black_24dp)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
