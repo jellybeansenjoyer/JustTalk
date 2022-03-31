@@ -4,10 +4,15 @@ import android.animation.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.ViewAnimationUtils
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat.animate
 import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.justtalk.R
 
 class ActivityTransition : AppCompatActivity() {
@@ -21,8 +26,23 @@ class ActivityTransition : AppCompatActivity() {
         }
         findViewById<Button>(R.id.button_press).apply{
             setOnClickListener {
-                enterExitAnimation()
+                circularAnimation()
             }
+        }
+    }
+    fun circularAnimation(){
+        findViewById<ImageView>(R.id.photo).apply{
+            val v = this
+            val cx = width/2
+            val cy = height/2
+            val hypot = Math.hypot(cx.toDouble(),cy.toDouble()).toFloat()
+            ViewAnimationUtils.createCircularReveal(this,cx,cy,0f,hypot).apply{
+                interpolator = AccelerateDecelerateInterpolator()
+                duration = 2000
+                start()
+                v.visibility = View.VISIBLE
+            }
+
         }
     }
     fun enterExitAnimation(){
