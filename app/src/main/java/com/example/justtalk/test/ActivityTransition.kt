@@ -1,8 +1,10 @@
 package com.example.justtalk.test
 
 import android.animation.*
+import android.graphics.Path
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -11,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat.animate
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.FlingAnimation
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.justtalk.R
@@ -24,11 +28,15 @@ class ActivityTransition : AppCompatActivity() {
                 add(R.id.container,BlankFragment_1())
             }
         }
+
         findViewById<Button>(R.id.button_press).apply{
             setOnClickListener {
-                circularAnimation()
+
             }
         }
+    }
+    fun addPath(){
+        Path().addArc(0f, 0f, 1000f, 1000f, 270f, -180f)
     }
     fun circularAnimation(){
         findViewById<ImageView>(R.id.photo).apply{

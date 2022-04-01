@@ -38,6 +38,10 @@ android {
 }
 
 dependencies {
+    //animations physics dependencies
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+
+
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
     def lifecycle_version = "2.0.0"
