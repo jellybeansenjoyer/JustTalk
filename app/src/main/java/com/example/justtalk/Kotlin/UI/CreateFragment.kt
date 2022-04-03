@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentCreateBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -17,9 +18,10 @@ import com.google.firebase.ktx.Firebase
 private const val TAG = "CreateFragment"
 class CreateFragment : Fragment() {
     lateinit private var mBinding : FragmentCreateBinding
+    lateinit private var mAuth : FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        mAuth = Firebase.auth
     }
 
     override fun onCreateView(
