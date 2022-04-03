@@ -14,19 +14,26 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentUserProfileBinding
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val TAG = "FragmentUserProfile"
-class FragmentUserProfile : Fragment() {
+class FragmentUserProfile : Fragment(),InterceptProgress {
     lateinit private var mBinding : FragmentUserProfileBinding
     private val mModel:MainActivityViewModel by activityViewModels()
     lateinit private var mReference: DatabaseReference
@@ -62,6 +69,7 @@ class FragmentUserProfile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.changePicture.setOnClickListener {
+            it.isEnabled = false
             changeDp()
         }
         mBinding.commitChanges.setOnClickListener {
@@ -81,7 +89,6 @@ class FragmentUserProfile : Fragment() {
     fun changeWord(word:String?=null,dp:Uri?=null) {
         if (word == null && dp == null)
             return
-        Log.e(TAG,word!!)
         var user: User? = null
         mReference.orderByKey().equalTo(mUser.id!!)
             .addValueEventListener(object : ValueEventListener {
@@ -97,17 +104,7 @@ class FragmentUserProfile : Fragment() {
                                     user!!.dp = it.toString()
                                 }
                             }
-
-//                            mReference.updateChildren(
-//                                hashMapOf<String,Any>(
-//                                    Pair<String, User>(
-//                                        mUser.id!!,
-//                                        user!!
-//                                    )
-//                                )
-//                            ).addOnFailureListener {
-//                                Log.e(TAG,it.toString())
-//                            }
+                            mReference.updateChildren(hashMapOf<String,Any>(Pair<String, User>(mUser.id!!, user!!)))
                         }
                 }
 
@@ -115,17 +112,23 @@ class FragmentUserProfile : Fragment() {
                 }
             })
         dp?.let {
-            mStorage.apply {
-                    putFile(mUrl!!).addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Toast.makeText(
-                                this@FragmentUserProfile.context!!,
-                                "uploadedSuccessfully",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+            mBinding.loadingImage.visibility = View.VISIBLE
+            mStorage.putFile(mUrl!!).apply{
+                progress(isInProgress)
+                addOnCompleteListener {
+
+                if (it.isSuccessful) {
+                    Toast.makeText(
+                        this@FragmentUserProfile.context!!,
+                        "uploadedSuccessfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    progress(isInProgress)
+                    mBinding.commitChanges.isEnabled = true
                 }
+
+            }
+        }
             }
     }
     fun changeDp(){
@@ -134,4 +137,14 @@ class FragmentUserProfile : Fragment() {
         intent.setType("image/*")
         cb.launch(intent)
     }
+
+    override fun progress(flag: Boolean) {
+        if(flag)
+        mBinding.loadingImage.visibility = View.VISIBLE
+        else
+        mBinding.loadingImage.visibility = View.INVISIBLE
+    }
+}
+interface InterceptProgress{
+    fun progress(flag:Boolean)
 }
