@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.justtalk.Kotlin.Adapter.FriendListAddFriendListener
+import com.example.justtalk.Kotlin.Adapter.FriendsListAdapter
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentFindFriendsBinding

@@ -1,4 +1,4 @@
-package com.example.justtalk.Kotlin.UI
+package com.example.justtalk.Kotlin.Adapter
 
 import android.util.Log
 import android.view.LayoutInflater

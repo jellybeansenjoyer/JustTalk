@@ -3,6 +3,8 @@ package com.example.justtalk.Kotlin.UI
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -35,6 +37,24 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.popBackStack()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+         menuInflater.inflate(R.menu.toolbar_menu,menu)
+           return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.userInfo->{
+                makeTransactions(FragmentUserProfile::class)
+                return true
+            }
+            else->{
+                return super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //intialize view model
@@ -43,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         window.statusBarColor = resources.getColor(R.color.marine_green)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-
+        setSupportActionBar(mBinding.toolbar)
         if(savedInstanceState==null){
             mBinding.tabLayout.selectTab(mBinding.tabLayout.getTabAt(0))
             makeTransactions(ChatFragment::class)

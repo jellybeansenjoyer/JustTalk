@@ -8,23 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.justtalk.Kotlin.Adapter.TestAdapter
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentRecyclerViewTestBinding
+import com.example.justtalk.test.ViewModelTest
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.time.format.DateTimeFormatter
 
 private const val TAG = "RecyclerViewTestFragmen"
 class RecyclerViewTestFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.example.justtalk.Kotlin.UI
+package com.example.justtalk.test
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

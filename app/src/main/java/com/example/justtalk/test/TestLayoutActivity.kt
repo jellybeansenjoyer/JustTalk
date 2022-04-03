@@ -1,15 +1,10 @@
-package com.example.justtalk.Kotlin.UI
+package com.example.justtalk.test
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.justtalk.R
-import com.example.justtalk.test.BlankFragment1
-import com.example.justtalk.test.BlankFragment2
-import com.example.justtalk.test.BlankFragment3
 import com.google.android.material.tabs.TabLayout
 
 private const val TAG = "TestLayoutActivity"

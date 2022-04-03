@@ -15,11 +15,12 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         >
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="0dp"
+            app:menu="@menu/toolbar_menu"
             app:titleTextAppearance="@style/JustTalk.Toolbar.Title"
             android:layout_margin="4dp"
             app:title="JustTalk"
