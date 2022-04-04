@@ -64,10 +64,16 @@ class MainActivity : AppCompatActivity() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         setSupportActionBar(mBinding.toolbar)
+        supportFragmentManager.apply{
+            if(fragments.size>0 && fragments[0] is TalkFragment){
+                mBinding.tabLayout.visibility = View.GONE
+            }
+        }
         if(savedInstanceState==null){
             mBinding.tabLayout.selectTab(mBinding.tabLayout.getTabAt(0))
             makeTransactions(ChatFragment::class)
         }
+
         mBinding.tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
