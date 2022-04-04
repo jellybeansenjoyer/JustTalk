@@ -23,6 +23,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 private const val TAG = "ChatListAdapter"
 class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser:User) : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
@@ -49,9 +52,14 @@ class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser
                mBinding.card.setOnClickListener{
                    mListener.onClick(user,view,false)
                }
-            getTheLastText(user,mBinding.lastMessageTextView)
+            getTheLastText(user,mBinding.lastMessageTextView,mBinding.timestampUser)
         }
-        fun getTheLastText(user:User,textView: TextView){
+        fun makeDate(time:Long):String{
+            val date = Date(time)
+            val formatter = SimpleDateFormat("dd/MM/yyyy")
+            return formatter.format(date)
+        }
+        fun getTheLastText(user:User,textView: TextView,dateTextView:TextView){
             Firebase.database.reference.child("ChatRoomRef/${mUser.id}").orderByKey().addValueEventListener(object:ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot.getValue(object:GenericTypeIndicator<HashMap<String, ChatRef>>(){})?.let{
@@ -63,6 +71,8 @@ class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser
                                             it.values.last().apply{
                                                 textView.setText(this.content)
                                                 Log.e(TAG,content!!)
+                                                val date = makeDate(this.timestamp!!.toLong())
+                                                dateTextView.setText(date)
                                             }
                                         }
                                     }

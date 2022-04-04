@@ -22,7 +22,11 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.protobuf.Value
+import java.text.SimpleDateFormat
 import java.time.temporal.ValueRange
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 private const val TAG = "ChatFragment"
 class ChatFragment() : Fragment(), ChatClickCallback {
@@ -97,6 +101,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
             }
         })
     }
+
     fun createList(){
         Firebase.database.reference.child("ChatRoomRef/${mViewModel.mUser.value!!.id!!}/").addChildEventListener(object:ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
