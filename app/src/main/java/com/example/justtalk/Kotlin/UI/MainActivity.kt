@@ -104,8 +104,10 @@ class MainActivity : AppCompatActivity() {
                 add(R.id.container,fragment.java,data)
             }else{
                 replace(R.id.container,fragment.java,data)
+
             }
             addToBackStack(fragment.qualifiedName)
+            Log.e(TAG,supportFragmentManager.fragments.size.toString())
         }
     }
 }

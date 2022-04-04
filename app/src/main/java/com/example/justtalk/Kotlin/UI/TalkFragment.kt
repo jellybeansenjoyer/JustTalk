@@ -45,12 +45,11 @@ class TalkFragment : Fragment() {
         getEndUser(mChat.freindId!!)
         mModel.setMessageList(ArrayList())
         mRoom = Firebase.database.reference.child("MessageRoom/${mChat.chatRoomId}/")
-        if (savedInstanceState == null) {
-            (activity as MainActivity).apply {
+        (activity as MainActivity).apply{
+            if (savedInstanceState == null) {
                 findViewById<AppBarLayout>(R.id.appbar).visibility =
                     View.GONE
             }
-
         }
     }
     override fun onCreateView(
@@ -151,6 +150,8 @@ class TalkFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        (activity as MainActivity).findViewById<AppBarLayout>(R.id.appbar).visibility = View.VISIBLE
+        (activity as MainActivity).apply{
+            findViewById<AppBarLayout>(R.id.appbar).visibility = View.VISIBLE
+        }
     }
 }
