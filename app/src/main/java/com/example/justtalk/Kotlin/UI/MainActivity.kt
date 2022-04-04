@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         setSupportActionBar(mBinding.toolbar)
+        mBinding.toolbar.visibility = View.VISIBLE
         supportFragmentManager.apply{
             if(fragments.size>0){
                 if(fragments[0] is TalkFragment){

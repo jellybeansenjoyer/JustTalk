@@ -65,7 +65,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-            val adapter = ChatListAdapter(this)
+            val adapter = ChatListAdapter(this,mUser)
                 mViewModel.listOfFriends.observe(requireActivity()){
                     adapter.submitList(listOfPeople)
                 }

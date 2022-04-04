@@ -9,6 +9,7 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="4dp"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,6 +49,7 @@
         app:layout_constraintVertical_bias="0.30"
         tools:text="Yesterday" />
     <TextView
+        android:id="@+id/last_message_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12dp"
@@ -56,6 +58,7 @@
         app:layout_constraintTop_toBottomOf="@id/name_user"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/dp_user"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
