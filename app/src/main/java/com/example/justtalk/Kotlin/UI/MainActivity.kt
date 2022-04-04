@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit private var mViewModel : MainActivityViewModel
     override fun onBackPressed() {
         Log.e(TAG,supportFragmentManager.fragments.size.toString())
-        if(supportFragmentManager.fragments.size==2){
+        if(supportFragmentManager.fragments.size==1){
             finish()
         }else{
             supportFragmentManager.popBackStack()

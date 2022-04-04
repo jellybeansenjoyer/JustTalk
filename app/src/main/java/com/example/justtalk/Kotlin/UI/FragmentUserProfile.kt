@@ -64,8 +64,10 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
         mBinding.NameUser.setText(mUser.name!!)
         mStorage = Firebase.storage.reference.child("UserDP/${mUser.uid!!}.jpg")
         mStorage.downloadUrl.addOnSuccessListener {
-            Glide.with(this.context!!).load(it).into(mBinding.dpUser)
-        }
+            this.context?.let {
+                Glide.with(it.applicationContext).load(it).into(mBinding.dpUser)
+            }
+            }
         return mBinding.root
     }
 
