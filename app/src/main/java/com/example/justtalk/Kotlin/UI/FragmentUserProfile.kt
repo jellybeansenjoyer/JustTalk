@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
+import com.example.justtalk.databinding.ActivityMainBinding
 import com.example.justtalk.databinding.FragmentUserProfileBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -38,6 +39,7 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
     private val mModel:MainActivityViewModel by activityViewModels()
     lateinit private var mReference: DatabaseReference
     lateinit private var mUser: User
+    lateinit private var pBinding : ActivityMainBinding
     lateinit private var mStorage:StorageReference
     private var mUrl: Uri? = null
     private val cb = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
@@ -50,6 +52,7 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
         super.onCreate(savedInstanceState)
         mReference = Firebase.database.reference.child("Users")
         mUser = mModel.mUser.value!!
+        pBinding = (activity as MainActivity).mBinding
     }
 
     override fun onCreateView(
@@ -112,7 +115,6 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
                 }
             })
         dp?.let {
-            mBinding.loadingImage.visibility = View.VISIBLE
             mStorage.putFile(mUrl!!).apply{
                 progress(isInProgress)
                 addOnCompleteListener {
@@ -140,9 +142,10 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
 
     override fun progress(flag: Boolean) {
         if(flag)
-        mBinding.loadingImage.visibility = View.VISIBLE
+            pBinding.progressBar.visibility = View.VISIBLE
         else
-        mBinding.loadingImage.visibility = View.INVISIBLE
+            pBinding.progressBar.visibility = View.INVISIBLE
+
     }
 }
 interface InterceptProgress{

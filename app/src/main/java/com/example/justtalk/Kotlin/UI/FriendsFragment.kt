@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.graphics.Outline
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.justtalk.Kotlin.Adapter.ChatClickCallback
 import com.example.justtalk.Kotlin.models.Chat
@@ -15,9 +16,12 @@ import com.example.justtalk.Kotlin.models.ChatRef
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentFriendsBinding
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FriendsFragment : Fragment(),ChatClickCallback {
     lateinit private var mBinding: FragmentFriendsBinding
@@ -30,6 +34,7 @@ class FriendsFragment : Fragment(),ChatClickCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mUser = model.mUser.value!!
+
         mReference = Firebase.database.reference.child("Users")
         if(model.listOfRequests.value==null)
             createList()

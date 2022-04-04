@@ -20,6 +20,7 @@ import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentTalkBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -44,9 +45,14 @@ class TalkFragment : Fragment() {
         getEndUser(mChat.freindId!!)
         mModel.setMessageList(ArrayList())
         mRoom = Firebase.database.reference.child("MessageRoom/${mChat.chatRoomId}/")
-        (activity as MainActivity).findViewById<AppBarLayout>(R.id.appbar).visibility = View.GONE
-    }
+        if (savedInstanceState == null) {
+            (activity as MainActivity).apply {
+                findViewById<AppBarLayout>(R.id.appbar).visibility =
+                    View.GONE
+            }
 
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,12 +117,13 @@ class TalkFragment : Fragment() {
                     it.values.forEach {
                         mEndUser = it
                         mStorage = Firebase.storage.reference.child("UserDP/${it.uid}.jpg")
-                        mStorage.downloadUrl.addOnCompleteListener {
-                            if(it.isComplete){
-                                Glide.with(requireContext()).load(it.result).into(mBinding.dpToolbar)
+                        mStorage.downloadUrl.addOnCompleteListener {task->
+                            if(task.isComplete){
+                                context?.let{
+                                    Glide.with(it.applicationContext).load(task.result).into(mBinding.dpToolbar)
+                                }
                             }
                         }
-                        Glide.with(this@TalkFragment.context!!).load(mUser.dp).into(mBinding.dpToolbar)
                         mBinding.toolbar.setTitle(it.name)
 
                     }

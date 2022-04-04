@@ -47,7 +47,7 @@ class MessageThreadAdapter(private var mEndUser: User,private var mUser:User) : 
                          this.message.setText(message.content)
                          mStorage.child("${mEndUser.uid}.jpg").downloadUrl.addOnCompleteListener {
                              if(it.isComplete){
-                                 Glide.with(mContext).load(it.result).into(this.userDp)
+                                 Glide.with(mContext.applicationContext).load(it.result).into(this.userDp)
                              }
                          }
                      }
@@ -58,7 +58,7 @@ class MessageThreadAdapter(private var mEndUser: User,private var mUser:User) : 
                          this.message.setText(message.content)
                          mStorage.child("${mUser.uid}.jpg").downloadUrl.addOnCompleteListener {
                              if(it.isComplete){
-                                 Glide.with(mContext).load(it.result).into(this.userDp)
+                                 Glide.with(mContext.applicationContext).load(it.result).into(this.userDp)
                              }
                          }
                      }
