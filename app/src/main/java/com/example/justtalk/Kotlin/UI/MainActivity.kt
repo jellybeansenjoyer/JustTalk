@@ -65,8 +65,11 @@ class MainActivity : AppCompatActivity() {
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         setSupportActionBar(mBinding.toolbar)
         supportFragmentManager.apply{
-            if(fragments.size>0 && fragments[0] is TalkFragment){
-                mBinding.tabLayout.visibility = View.GONE
+            if(fragments.size>0){
+                if(fragments[0] is TalkFragment){
+                    mBinding.tabLayout.visibility = View.GONE
+                    mBinding.toolbar.visibility = View.GONE
+                }
             }
         }
         if(savedInstanceState==null){
