@@ -45,6 +45,7 @@ class MessageThreadAdapter(private var mEndUser: User,private var mUser:User) : 
              when(flag){
                  0->{
                      (mBinding as ModelMessageBinding).run{
+
                          this.message.setText(message.content)
                          mStorage.child("${mEndUser.uid}.jpg").downloadUrl.addOnCompleteListener {
                              if(it.isComplete){
