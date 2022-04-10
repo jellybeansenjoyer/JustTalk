@@ -65,11 +65,16 @@ class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser
                     snapshot.getValue(object:GenericTypeIndicator<HashMap<String, ChatRef>>(){})?.let{
                         it.values.forEach {
                             if(it.freindId.equals(user.id)){
-                                Firebase.database.reference.child("MessageRoom/${it.chatRoomId}").orderByKey().addValueEventListener(object:ValueEventListener{
+                                Firebase.database.reference.child("MessageRoom/${it.chatRoomId}").orderByKey().limitToLast(1).addValueEventListener(object:ValueEventListener{
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         snapshot.getValue(object:GenericTypeIndicator<HashMap<String, Message>>(){})?.let{
+                                            Log.e(TAG+"blah",it.size.toString())
                                             it.values.last().apply{
+                                                if(this.content!!.length<50)
                                                 textView.setText(this.content)
+                                                else{
+                                                    textView.setText(this.content!!.substring(0,30)+"...")
+                                                }
                                                 Log.e(TAG,content!!)
                                                 val date = makeDate(this.timestamp!!.toLong())
                                                 dateTextView.setText(date)

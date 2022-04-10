@@ -2,6 +2,7 @@ package com.example.justtalk.Kotlin.Adapter
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
+private const val TAG = "MessageThreadAdapter"
 class MessageThreadAdapter(private var mEndUser: User,private var mUser:User) : RecyclerView.Adapter<MessageThreadAdapter.MessageViewHolder>() {
     private var oldList: List<Message> = emptyList()
     class MessageViewHolder(private val view: View,private val flag:Int,private var mEndUser: User,private val mContext:Context,var mUser:User) : RecyclerView.ViewHolder(view) {
@@ -40,7 +42,6 @@ class MessageThreadAdapter(private var mEndUser: User,private var mUser:User) : 
         }
 
         fun bind(message: Message) {
-
              when(flag){
                  0->{
                      (mBinding as ModelMessageBinding).run{
