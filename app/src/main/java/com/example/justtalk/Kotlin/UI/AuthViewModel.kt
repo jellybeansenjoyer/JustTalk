@@ -5,11 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.justtalk.Kotlin.models.Parcel
 import com.example.justtalk.Kotlin.models.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class AuthViewModel : ViewModel() {
+
     private val _mData: MutableLiveData<String> = MutableLiveData()
     val mData : LiveData<String> = _mData
 
+    //Property to hold the value of the current User in AuthActivity
     private val _mUser: MutableLiveData<User> = MutableLiveData()
             val mUser:LiveData<User> = _mUser
 
@@ -25,17 +29,12 @@ class AuthViewModel : ViewModel() {
     val ssid :  LiveData<String>
     get() = _ssid
 
-
-
     public fun setUserKey(key:String){
         _userKey.value = key
     }
+
     public fun setUserValue(user:User){
         _mUser.value = user
-    }
-
-    public fun setDate(date:String){
-        _mData.value = date
     }
 
     public fun setList(users:List<User>){

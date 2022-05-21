@@ -26,6 +26,7 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
             mBinding = DataBindingUtil.bind(view)!!
             mStorage = Firebase.storage.reference
         }
+        //Set the name and download the image and place it in the view
         fun bind(user:User){
             mBinding.nameUser.setText(user.name)
             mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener{
@@ -33,6 +34,7 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
                     Glide.with(parent.context.applicationContext).load(it.result).into(mBinding.userPhoto)
                 }
             }
+            //On plus press then callback is executed and the plus is disappeared
             mBinding.taptobefriend.setOnClickListener{
                 requestListener.sendRequest(user)
                 it.visibility = View.INVISIBLE
@@ -75,5 +77,4 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
         oldList = newList
         calc.dispatchUpdatesTo(this)
         }
-
 }

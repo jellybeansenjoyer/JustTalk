@@ -1,12 +1,14 @@
 package com.example.justtalk.Kotlin.UI
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentLoginBinding
@@ -15,10 +17,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 
+//To LogIn the User into the app
 class LoginFragment : Fragment() {
     lateinit private var mBinding:FragmentLoginBinding
     lateinit private var mAuth:FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAuth = Firebase.auth
@@ -45,6 +47,7 @@ class LoginFragment : Fragment() {
                     if(it.isSuccessful){
                         val result = it.result
                         val currentUser = result.user!!
+                        //Update the User in VM and in AuthActivity
                         (activity as AuthActivity).apply {
                             getUserAndUpdateVM(currentUser.uid,true)
                         }
@@ -56,10 +59,10 @@ class LoginFragment : Fragment() {
                 Toast.makeText(activity, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
         }
+        //Replace this fragment with the createFragment
         mBinding.createButton.setOnClickListener{
             (activity as AuthActivity).makeTransaction(CreateFragment::class,null,"replace")
         }
-
     }
 
 }

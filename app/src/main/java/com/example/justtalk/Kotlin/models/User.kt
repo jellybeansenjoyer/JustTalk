@@ -2,8 +2,10 @@ package com.example.justtalk.Kotlin.models
 
 import java.io.Serializable
 
+/*Serializable is a wrapper that wraps the object of the class
+* can be used for transfer of data via intents cross activity */
 data class User(
-    var id:String?="", //Ref Id
+    var id:String?="",
     var uid:String?="",
     var name:String?="",
     var email:String?="",
@@ -13,38 +15,13 @@ data class User(
     var phno:String?="",
     var chatroomref:String?=""
 ):Serializable{
-
 }
-
 data class Parcel(
     var userCurrent:User,
     var ssid:String?
 ):Serializable{
 
 }
-data class RequestRoom(
-    var id:String?="",
-    var userIds:List<String?> = ArrayList()
-)
-
-data class FriendsRoom(
-    var id:String?="",
-    var userIds:List<String?> = ArrayList()
-)
-
-data class ChatRoom(
-    var id:String?="",
-    var userIds:List<String?> = ArrayList()
-)
-
-data class UserToken(
-    var id:String,
-    var user:User
-)
-
-
-
-
 
 
 

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentCreateBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//To create a new User for the app
 private const val TAG = "CreateFragment"
 class CreateFragment : Fragment() {
     lateinit private var mBinding : FragmentCreateBinding
@@ -41,12 +43,14 @@ class CreateFragment : Fragment() {
             val email = mBinding.emailTiet.text.toString()
             val pass = mBinding.passwordTiet.text.toString()
             val confirmpass = mBinding.passwordTiet2.text.toString()
-
+            //Non Empty Field Check
             if(!email.isEmpty()&&!pass.isEmpty()&&!confirmpass.isEmpty()){
-                 if(pass.equals(confirmpass)){
+                //Password Mismatch check
+                if(pass.equals(confirmpass)){
+                    //CreateUser
                     mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener {
                         if(it.isSuccessful){
-                                val bundle = Bundle()
+                            val bundle = Bundle()
                                 bundle.putString("InfoId",pass)
                                 (activity as AuthActivity).makeTransaction(InfoFragment::class,bundle,"replace")
 

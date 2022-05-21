@@ -5,4 +5,7 @@
         android:title="User Profile"
         android:icon="@drawable/ic_info"
         />
+    <item
+        android:id="@+id/logOut"
+        android:title="Log Out"/>
 </menu>
