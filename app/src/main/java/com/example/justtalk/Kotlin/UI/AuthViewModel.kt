@@ -10,41 +10,47 @@ import com.google.firebase.auth.FirebaseUser
 
 class AuthViewModel : ViewModel() {
 
-    private val _mData: MutableLiveData<String> = MutableLiveData()
-    val mData : LiveData<String> = _mData
+//    private val _mData: MutableLiveData<String?> = MutableLiveData()
+//    val mData : LiveData<String?> = _mData
 
     //Property to hold the value of the current User in AuthActivity
-    private val _mUser: MutableLiveData<User> = MutableLiveData()
-            val mUser:LiveData<User> = _mUser
+    private val _mUser: MutableLiveData<User?> = MutableLiveData()
+            val mUser:LiveData<User?> = _mUser
 
-    private val _mUsers:MutableLiveData<List<User>> = MutableLiveData()
-    val mUsers:LiveData<List<User>>
+    private val _mUsers:MutableLiveData<List<User?>> = MutableLiveData()
+    val mUsers:LiveData<List<User?>>
     get() = _mUsers
 
-    private val _userKey: MutableLiveData<String> = MutableLiveData()
-    val userKey: LiveData<String>
+    private val _userKey: MutableLiveData<String?> = MutableLiveData()
+    val userKey: LiveData<String?>
     get() = _userKey
 
-    private val _ssid : MutableLiveData<String> = MutableLiveData()
-    val ssid :  LiveData<String>
+    private val _ssid : MutableLiveData<String?> = MutableLiveData()
+    val ssid :  LiveData<String?>
     get() = _ssid
 
-    public fun setUserKey(key:String){
+    public fun setUserKey(key:String?){
         _userKey.value = key
     }
 
-    public fun setUserValue(user:User){
+    public fun setUserValue(user:User?){
         _mUser.value = user
     }
 
-    public fun setList(users:List<User>){
+    public fun setList(users:List<User?>){
         _mUsers.value = users
     }
-    public fun setSSID(ssid:String){
-        _ssid.value = ssid
-        _mUser.value!!.chatroomref = _ssid.value!!
-    }
-    fun exportParcel():Parcel{
-        return Parcel(mUser.value!!,ssid.value)
+//    public fun setSSID(ssid:String){
+//        _ssid.value = ssid
+//        _mUser.value!!.chatroomref = _ssid.value!!
+//    }
+//    fun exportParcel():Parcel{
+//        return Parcel(mUser.value!!,ssid.value)
+//    }
+    fun reset(){
+        _mUser.value = null
+        _mUsers.value = ArrayList()
+        _userKey.value = null
+        _ssid.value = null
     }
 }

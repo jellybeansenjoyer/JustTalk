@@ -18,7 +18,7 @@ import com.google.firebase.storage.ktx.storage
 
 private const val TAG = "FriendsListAdapter"
 class FriendsListAdapter(private val requestListener:FriendListAddFriendListener) : RecyclerView.Adapter<FriendsListAdapter.FriendsViewHolder>() {
-    private var oldList:List<User> = emptyList()
+    private var oldList:List<User?> = emptyList()
     class FriendsViewHolder(private val view: View,private val parent:ViewGroup,private val requestListener: FriendListAddFriendListener) : RecyclerView.ViewHolder(view){
         private var mBinding: FriendViewBinding
         lateinit private var mStorage : StorageReference
@@ -54,12 +54,12 @@ class FriendsListAdapter(private val requestListener:FriendListAddFriendListener
     }
 
     override fun onBindViewHolder(holder: FriendsViewHolder, position: Int) {
-        holder.bind(oldList.get(position))
+        holder.bind(oldList.get(position)!!)
     }
 
     override fun getItemCount() = oldList.size
 
-    fun submitList(newList:List<User>){
+    fun submitList(newList:List<User?>){
         val cb= object : DiffUtil.Callback(){
             override fun getOldListSize() = oldList.size
 

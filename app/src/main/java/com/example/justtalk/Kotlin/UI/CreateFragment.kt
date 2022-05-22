@@ -1,5 +1,6 @@
 package com.example.justtalk.Kotlin.UI
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import com.example.justtalk.R
@@ -52,8 +54,17 @@ class CreateFragment : Fragment() {
                         if(it.isSuccessful){
                             val bundle = Bundle()
                                 bundle.putString("InfoId",pass)
-                                (activity as AuthActivity).makeTransaction(InfoFragment::class,bundle,"replace")
-
+                                (activity as AuthActivity).apply {
+                                    val sharedPref = getSharedPreferences(AUTH_SHARED_PREFERENCE,
+                                        Context.MODE_PRIVATE
+                                    )
+                                    sharedPref.edit{
+                                        putString(EMAIL,email)
+                                        putString(PASS,pass)
+                                        putBoolean(LOGGED_IN,true)
+                                    }
+                                    makeTransaction(InfoFragment::class, bundle, "replace")
+                                }
                         }else{
                             Toast.makeText(requireActivity(), "User Creation Failed", Toast.LENGTH_SHORT).show()
                         }

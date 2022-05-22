@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit private var mAuth:FirebaseAuth
     lateinit var mBinding : ActivityMainBinding
     lateinit private var mViewModel : MainActivityViewModel
+    lateinit private var mAuthViewModel: AuthViewModel
     override fun onBackPressed() {
         Log.e(TAG,supportFragmentManager.fragments.size.toString())
         if(supportFragmentManager.fragments.size==1){
@@ -54,7 +55,9 @@ class MainActivity : AppCompatActivity() {
             R.id.logOut -> {
                 mAuth.signOut()
                 val intent = Intent(this, AuthActivity::class.java)
+                intent.putExtra("clr",1)
                 startActivity(intent)
+                mAuthViewModel.reset()
                 finish()
                 Log.e(TAG,"finished")
                 return true
@@ -75,6 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        mAuthViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
         setSupportActionBar(mBinding.toolbar)
         mBinding.toolbar.visibility = View.VISIBLE

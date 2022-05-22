@@ -1,5 +1,6 @@
 package com.example.justtalk.Kotlin.UI
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -43,18 +45,7 @@ class LoginFragment : Fragment() {
             val email = mBinding.emailTiet.text.toString()
             val pass = mBinding.passwordTiet.text.toString()
             if(!email.isEmpty()&&!pass.isEmpty()){
-                mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
-                    if(it.isSuccessful){
-                        val result = it.result
-                        val currentUser = result.user!!
-                        //Update the User in VM and in AuthActivity
-                        (activity as AuthActivity).apply {
-                            getUserAndUpdateVM(currentUser.uid,true)
-                        }
-                    }else{
-                        Toast.makeText(requireContext(), "Login Failure", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                firebaseLogin(email,pass)
             }else{
                 Toast.makeText(activity, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }
@@ -65,4 +56,24 @@ class LoginFragment : Fragment() {
         }
     }
 
+    fun firebaseLogin(email:String,pass:String){
+        mAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
+            if(it.isSuccessful){
+                val result = it.result
+                val currentUser = result.user!!
+                //Update the User in VM and in AuthActivity
+                (activity as AuthActivity).apply {
+                    val sharedPref = getSharedPreferences(AUTH_SHARED_PREFERENCE,MODE_PRIVATE)
+                    sharedPref.edit{
+                        putString(EMAIL,email)
+                        putString(PASS,pass)
+                        putBoolean(LOGGED_IN,true)
+                    }
+                    getUserAndUpdateVM(currentUser.uid,true)
+                }
+            }else{
+                Toast.makeText(requireActivity(), "Login Failure", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

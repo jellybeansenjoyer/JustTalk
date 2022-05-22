@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.edit
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -22,6 +24,11 @@ import kotlin.reflect.KClass
 //const is added to global variables and can hold values that can be realized at compile time
 //those values are immutable whearas val can do both
 private const val TAG = "AuthActivity"
+const val LOGGED_IN = "Login"
+const val AUTH_SHARED_PREFERENCE="AuthPref"
+const val UID="uid"
+const val EMAIL="email"
+const val PASS="pass"
 
 class AuthActivity : AppCompatActivity(){
     /* Get the current fragment and if login then quit activity
@@ -43,21 +50,28 @@ class AuthActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        intent?.let{
+            Log.e(TAG,"madar")
+            val bundle = it.extras
+            bundle?.let {
+                val clrflag = it.getInt("clr")
+                if(clrflag==1)
+                {
+                    Log.e(TAG,"madar2")
+                    getSharedPreferences(AUTH_SHARED_PREFERENCE, MODE_PRIVATE).edit{
+                        putBoolean(LOGGED_IN,false)
+                    }
+                }
+            }
+        }
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_auth)
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
         mReference = Firebase.database.reference.child("Users")
+        val flag = loginCheck()
+        if(flag)
+            return
         mAuth = Firebase.auth
         mAuth.signOut()
-        mAuth.addAuthStateListener(object:FirebaseAuth.AuthStateListener{
-            override fun onAuthStateChanged(p0: FirebaseAuth) {
-                if(p0==null){
-                    Log.e(TAG,"NULL")
-                }else{
-                    Log.e(TAG,"NOT NULL")
-                }
-            }
-
-        })
 
     //Load LoginFragment only while the first start to the app
     if(savedInstanceState==null)
@@ -132,5 +146,23 @@ class AuthActivity : AppCompatActivity(){
             }
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+    fun loginCheck():Boolean{
+        val sharedPref = getSharedPreferences(AUTH_SHARED_PREFERENCE, MODE_PRIVATE)
+        val flag = sharedPref.getBoolean(LOGGED_IN,false)
+        if(flag){
+            makeTransaction(SplashFragment::class,null,"add")
+            val email = sharedPref.getString(EMAIL,"err")!!
+            val pass = sharedPref.getString(PASS,"err")!!
+            Firebase.auth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
+                if(it.isSuccessful){
+                    getUserAndUpdateVM(it.result.user!!.uid,true)
+                }else{
+                    Toast.makeText(this, "Failure Logging in", Toast.LENGTH_SHORT).show()
+                }
+            }
+            return true
+        }else
+            return false
     }
 }

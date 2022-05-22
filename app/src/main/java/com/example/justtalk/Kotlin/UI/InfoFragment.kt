@@ -1,6 +1,7 @@
 package com.example.justtalk.Kotlin.UI
 
 import android.app.Activity.RESULT_OK
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.net.Uri
@@ -17,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.core.content.edit
 import androidx.core.view.isEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
@@ -130,6 +132,7 @@ class InfoFragment() : Fragment() {
         val dp:String = image.toString()
         val mUser = User(id=id,name=name,uid=uid,email=email,dp=dp)
 
+
         //Setting the User object for the App in the ModelDatabase & the Key
         model.setUserKey(key)
         model.setUserValue(mUser)
@@ -138,4 +141,5 @@ class InfoFragment() : Fragment() {
         mReference.updateChildren(hashMapOf(Pair<String,Any>(key,mUser)))
         mStorage.putFile(image!!)
     }
+
 }
