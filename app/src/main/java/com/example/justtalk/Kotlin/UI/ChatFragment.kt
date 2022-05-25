@@ -13,6 +13,7 @@ import com.example.justtalk.Kotlin.Adapter.ChatClickCallback
 import com.example.justtalk.Kotlin.Adapter.ChatListAdapter
 import com.example.justtalk.Kotlin.models.Chat
 import com.example.justtalk.Kotlin.models.ChatRef
+import com.example.justtalk.Kotlin.models.Group
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentChatBinding
@@ -134,6 +135,15 @@ class ChatFragment() : Fragment(), ChatClickCallback {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+        fun getGroups():List<Group>{
+            Firebase.database.reference.child("GroupChats").orderByKey().addValueEventListener(object:ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                }
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
 //
 //         Firebase.database.reference.child("ChatRoomRef/${mViewModel.mUser.value!!.id!!}/").orderByKey().addValueEventListener(object:ValueEventListener {
 //            override fun onDataChange(snapshot: DataSnapshot) {
