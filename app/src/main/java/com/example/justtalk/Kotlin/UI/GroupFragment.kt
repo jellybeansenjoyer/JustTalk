@@ -5,11 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.window.Dialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.justtalk.Kotlin.Adapter.SelectListAdapter
 import com.example.justtalk.Kotlin.models.ChatRef
+import com.example.justtalk.Kotlin.models.Group
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentGroupBinding
@@ -43,20 +46,28 @@ class GroupFragment : Fragment() {
         }
         mBinding.submitFab.setOnClickListener {
             mList = SelectListAdapter.SelectListViewHolder.mList
-            writeToDatabase(mList)
             model.setGrpFriendsList(mList)
+            writeToDatabase(mList)
             //transfer to dialog to chat fragment
         }
     }
     fun writeToDatabase(groupMembers: List<User>){
         val reference = Firebase.database.reference.child("Groups")
         val refChat = Firebase.database.reference.child("GroupRoomRef")
+        var master = ""
         groupMembers.forEach {
-            val master = reference.push().key!!
+             master = reference.push().key!!
             reference.child("${it.uid}").run{
                 updateChildren(hashMapOf(Pair<String,Any>(this.push().key!!,master)))
             }
-
         }
+        MakeGroupDialog(object:grpData{
+            override fun transfer(mPackage: Pack) {
+                val grp = Group(name= mPackage.name!!, dp=mPackage.dp!!, members = groupMembers,id=master)
+                refChat.updateChildren(hashMapOf(Pair<String,Any>(master,grp)))
+                model.setGrp(grp)
+                Firebase.database.reference.child("RoomChat/${master}")
+            }
+        }).show(parentFragmentManager,"dialog")
     }
 }

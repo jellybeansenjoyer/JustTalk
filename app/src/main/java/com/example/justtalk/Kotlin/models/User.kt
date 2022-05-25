@@ -14,15 +14,17 @@ data class User(
     var bio:String?="",
     var phno:String?="",
     var chatroomref:String?=""
-):Serializable{
-}
+):ChatFrag()
+
 data class Parcel(
     var userCurrent:User,
     var ssid:String?
 ):Serializable{
 
 }
+abstract class ChatFrag():Serializable{
 
+}
 
 
 

@@ -5,4 +5,4 @@ data class Group(
     val name:String,
     val members:List<User>,
     val dp:String
-)
+):ChatFrag()
