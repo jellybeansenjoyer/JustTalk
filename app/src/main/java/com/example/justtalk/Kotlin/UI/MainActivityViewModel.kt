@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.justtalk.Kotlin.models.ChatRef
+import com.example.justtalk.Kotlin.models.Group
 import com.example.justtalk.Kotlin.models.Message
 import com.example.justtalk.Kotlin.models.User
 import com.google.firebase.auth.FirebaseUser
@@ -37,12 +38,27 @@ class MainActivityViewModel : ViewModel() {
     private var mFriend : MutableLiveData<User> = MutableLiveData()
     val _mFriend : LiveData<User>
     get() = mFriend
+
+    private var mListOfFriendsGrp: MutableLiveData<List<User>> = MutableLiveData()
+    val _mListOfFriendsGrp:LiveData<List<User>>
+    get() = mListOfFriendsGrp
+
+    private var mGroup: MutableLiveData<Group> = MutableLiveData()
+    val _mGroup: LiveData<Group>
+    get() = mGroup
     init {
         mMessageList.value = ArrayList<Message>()
+    }
+    fun setGrp(grp:Group){
+        mGroup.value = grp
+    }
+    fun setGrpFriendsList(list:List<User>){
+        mListOfFriendsGrp.value = list
     }
     fun setFriend(friend : User){
         mFriend.value = friend
     }
+
     fun setMessageList(messageList:ArrayList<Message>){
         mMessageList.value = messageList
     }

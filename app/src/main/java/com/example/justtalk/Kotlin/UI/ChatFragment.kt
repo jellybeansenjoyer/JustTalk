@@ -37,6 +37,7 @@ class ChatFragment() : Fragment(), ChatClickCallback {
     lateinit private var mUser:User
     private var listOfPeople = ArrayList<User>() //List of Chats
     lateinit private var mReference : DatabaseReference //User info database
+    lateinit private var mGroups:ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,43 +136,16 @@ class ChatFragment() : Fragment(), ChatClickCallback {
             override fun onCancelled(error: DatabaseError) {
             }
         })
-        fun getGroups():List<Group>{
-            Firebase.database.reference.child("GroupChats").orderByKey().addValueEventListener(object:ValueEventListener{
+        fun getGroups(){
+            Firebase.database.reference.child("Groups/${mUser.uid}").orderByKey().addValueEventListener(object:ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-
+                    snapshot.getValue(object:GenericTypeIndicator<HashMap<String,String>>(){})?.let {
+                        mGroups.addAll(it.values)
+                    }
                 }
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
         }
-//
-//         Firebase.database.reference.child("ChatRoomRef/${mViewModel.mUser.value!!.id!!}/").orderByKey().addValueEventListener(object:ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                snapshot.getValue(object : GenericTypeIndicator<HashMap<String, ChatRef>>(){})?.let{
-//                    it.entries.forEach{
-//                        val result = it.value
-//                        val endUser = result.freindId
-//                        val chatRef = result.chatRoomId
-//                        mReference.orderByKey().equalTo(endUser).addValueEventListener(object:ValueEventListener{
-//                            override fun onDataChange(snapshot: DataSnapshot) {
-//                                snapshot.getValue(object:GenericTypeIndicator<HashMap<String,User>>(){})?.let{
-//                                    it.values.forEach {
-//                                        it.chatroomref = chatRef
-//                                        listOfPeople.add(it)
-//                                    }
-//                                    mViewModel.setListOfFriends(listOfPeople)
-//                                }
-//                            }
-//                            override fun onCancelled(error: DatabaseError) {
-//                            }
-//                        })
-//                    }
-//                }
-//            }
-//            override fun onCancelled(error: DatabaseError) {
-//            }
-//        })
     }
-
-
 }

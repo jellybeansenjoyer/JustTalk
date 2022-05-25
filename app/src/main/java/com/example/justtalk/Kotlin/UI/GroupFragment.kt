@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.justtalk.Kotlin.Adapter.SelectListAdapter
+import com.example.justtalk.Kotlin.models.ChatRef
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.FragmentGroupBinding
@@ -43,20 +44,19 @@ class GroupFragment : Fragment() {
         mBinding.submitFab.setOnClickListener {
             mList = SelectListAdapter.SelectListViewHolder.mList
             writeToDatabase(mList)
+            model.setGrpFriendsList(mList)
             //transfer to dialog to chat fragment
-
         }
     }
     fun writeToDatabase(groupMembers: List<User>){
         val reference = Firebase.database.reference.child("Groups")
-        val master = reference.push().key!!
-        Firebase.database.reference.child("GroupChats/${master}").run {
-            updateChildren(hashMapOf(Pair<String,Any>(this.push().key!!,master)))
-        }
+        val refChat = Firebase.database.reference.child("GroupRoomRef")
         groupMembers.forEach {
+            val master = reference.push().key!!
             reference.child("${it.uid}").run{
                 updateChildren(hashMapOf(Pair<String,Any>(this.push().key!!,master)))
             }
+
         }
     }
 }

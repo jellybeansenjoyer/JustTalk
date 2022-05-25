@@ -9,5 +9,5 @@ data class Chat( //Room
 
 data class ChatRef(
     var freindId : String?="",
-    var chatRoomId : String?=""
+    var chatRoomId : String?="" //null for groups
 )
