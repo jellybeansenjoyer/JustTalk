@@ -39,20 +39,18 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
     private val mModel:MainActivityViewModel by activityViewModels()
     lateinit private var mReference: DatabaseReference
     lateinit private var mUser: User
-    lateinit private var pBinding : ActivityMainBinding
     lateinit private var mStorage:StorageReference
     private var mUrl: Uri? = null
     private val cb = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if(it.resultCode==Activity.RESULT_OK){
             mUrl = it.data!!.data!!
-            Glide.with(this.context!!).load(mUrl.toString()).into(mBinding.dpUser)
+            Glide.with(this.context!!.applicationContext).load(mUrl).into(mBinding.dpUser)
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mReference = Firebase.database.reference.child("Users")
         mUser = mModel.mUser.value!!
-        pBinding = (activity as MainActivity).mBinding
     }
 
     override fun onCreateView(
@@ -63,11 +61,13 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
         mBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_user_profile,container,false)
         mBinding.NameUser.setText(mUser.name!!)
         mStorage = Firebase.storage.reference.child("UserDP/${mUser.uid!!}.jpg")
-        mStorage.downloadUrl.addOnSuccessListener {
-            this.context?.let {
-                Glide.with(it.applicationContext).load(it).into(mBinding.dpUser)
+        mStorage.downloadUrl.addOnCompleteListener {
+            if(it.isSuccessful) {
+                this.context?.let {
+                    Glide.with(it.applicationContext).load(it).into(mBinding.dpUser)
+                }
             }
-            }
+        }
         return mBinding.root
     }
 
@@ -127,7 +127,7 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
                         "uploadedSuccessfully",
                         Toast.LENGTH_SHORT
                     ).show()
-                    progress(isInProgress)
+                    progress(!isInProgress)
                     mBinding.commitChanges.isEnabled = true
                 }
 
@@ -144,9 +144,9 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
 
     override fun progress(flag: Boolean) {
         if(flag)
-            pBinding.progressBar.visibility = View.VISIBLE
+            mBinding.progressBar.visibility = View.VISIBLE
         else
-            pBinding.progressBar.visibility = View.INVISIBLE
+            mBinding.progressBar.visibility = View.INVISIBLE
 
     }
 }

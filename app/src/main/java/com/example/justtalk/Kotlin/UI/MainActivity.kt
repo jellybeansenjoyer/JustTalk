@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.userInfo -> {
+                mBinding.toolbar.visibility = View.GONE
+                mBinding.tabLayout.visibility = View.GONE
+                setStatusBarColor(R.color.white)
                 makeTransactions(FragmentUserProfile::class)
                 return true
             }
@@ -72,9 +75,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //intialize view model
         Log.e(TAG,"Called")
-        val window = this.window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = resources.getColor(R.color.marine_green)
+        setStatusBarColor(R.color.marine_green)
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
@@ -146,5 +147,10 @@ class MainActivity : AppCompatActivity() {
             addToBackStack(fragment.qualifiedName)
             Log.e(TAG,supportFragmentManager.fragments.size.toString())
         }
+    }
+    fun setStatusBarColor(color:Int){
+        val window = this.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = resources.getColor(color)
     }
 }
