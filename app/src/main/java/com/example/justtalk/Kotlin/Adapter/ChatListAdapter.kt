@@ -10,9 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.justtalk.Kotlin.models.ChatRef
-import com.example.justtalk.Kotlin.models.Message
-import com.example.justtalk.Kotlin.models.User
+import com.example.justtalk.Kotlin.models.*
 import com.example.justtalk.R
 import com.example.justtalk.databinding.ModelChatBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +27,7 @@ import kotlin.collections.HashMap
 
 private const val TAG = "ChatListAdapter"
 class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser:User) : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
-    private var oldList:List<User> = emptyList()
+    private var oldList:List<ChatFrag> = emptyList()
     private var mReference: DatabaseReference
     init {
         mReference = Firebase.database.reference.child("Users")
@@ -42,17 +40,33 @@ class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser
             mStorage = Firebase.storage.reference
         }
 
-        fun bind(user:User){
-               mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener {
-                   if(it.isComplete){
-                       Glide.with(context.applicationContext).load(it.result).into(mBinding.dpUser)
-                   }
-               }
-               mBinding.nameUser.setText(user.name)
-               mBinding.card.setOnClickListener{
-                   mListener.onClick(user,view,false)
-               }
-            getTheLastText(user,mBinding.lastMessageTextView,mBinding.timestampUser)
+        fun bind(user:ChatFrag){
+            when(user){
+                is User->{
+                    mStorage.child("UserDP/${user.uid}.jpg").downloadUrl.addOnCompleteListener {
+                        if(it.isComplete){
+                            Glide.with(context.applicationContext).load(it.result).into(mBinding.dpUser)
+                        }
+                    }
+                    mBinding.nameUser.setText(user.name)
+                    mBinding.card.setOnClickListener{
+                        mListener.onClick(user,view,false)
+                    }
+                    getTheLastText(user,mBinding.lastMessageTextView,mBinding.timestampUser)
+
+                }
+                   is Group ->{
+                       mStorage.child("GroupDP/${user.dp}").downloadUrl.addOnCompleteListener {
+                           if(it.isSuccessful){
+                               Glide.with(context.applicationContext).load(it.result).into(mBinding.dpUser)
+                           }
+                       }
+                       mBinding.nameUser.setText(user.name)
+                       mBinding.card.setOnClickListener{
+                           mListener.onClick(user,view,false)
+                       }
+                }
+            }
         }
         fun makeDate(time:Long):String{
             val date = Date(time)
@@ -111,7 +125,7 @@ class ChatListAdapter(private val mListener: ChatClickCallback,private val mUser
 
     override fun getItemCount() = oldList.size
 
-     fun submitList(newList:List<User>){
+     fun submitList(newList:List<ChatFrag>){
         val diffutil = DiffUtilChat(oldList,newList)
         val calcdiff = DiffUtil.calculateDiff(diffutil)
         oldList = newList

@@ -37,21 +37,37 @@ class TalkFragment : Fragment() {
     private var listOfMessages = ArrayList<Message>()
     lateinit private var mEndUser: User
     lateinit private var mStorage : StorageReference
-
+    lateinit private var mGrpRoom:String
+    private var mResult:Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mUser = mModel.mUser.value!!
-        mChat = mModel._currentRoom.value!!
-        getEndUser(mChat.freindId!!)
-        mModel.setMessageList(ArrayList())
-        mRoom = Firebase.database.reference.child("MessageRoom/${mChat.chatRoomId}/")
+        arguments?.let {
+            it.getBoolean("trueifuser")?.let{
+                mResult = it
+            }
+        }
         (activity as MainActivity).apply{
             if (savedInstanceState == null) {
                 findViewById<AppBarLayout>(R.id.appbar).visibility =
                     View.GONE
             }
         }
-    }
+        mUser = mModel.mUser.value!!
+
+        mModel.setMessageList(ArrayList())
+        if(mResult) {
+
+            mChat = mModel._currentRoom.value!!
+            getEndUser(mChat.freindId!!)
+
+            mRoom = Firebase.database.reference.child("MessageRoom/${mChat.chatRoomId}/")
+
+        }else {
+            mGrpRoom = mModel._mGroupRoom.value!!
+
+            mRoom = Firebase.database.reference.child("RoomChat/${mGrpRoom}")
+        }
+        }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.justtalk.Kotlin.models.ChatRef
-import com.example.justtalk.Kotlin.models.Group
-import com.example.justtalk.Kotlin.models.Message
-import com.example.justtalk.Kotlin.models.User
+import com.example.justtalk.Kotlin.models.*
 import com.google.firebase.auth.FirebaseUser
 
 private const val TAG = "MainActivityViewModel"
@@ -23,9 +20,13 @@ class MainActivityViewModel : ViewModel() {
     val listOfRequests:LiveData<ArrayList<User>>
     get()=_listOfRequests
 
-    private var _listOfFriends : MutableLiveData<ArrayList<User>> = MutableLiveData()
-    val listOfFriends: LiveData<ArrayList<User>>
+    private var _listOfFriends : MutableLiveData<ArrayList<ChatFrag>> = MutableLiveData()
+    val listOfFriends: LiveData<ArrayList<ChatFrag>>
     get() = _listOfFriends
+
+    private var mListOfIndivisuals: MutableLiveData<ArrayList<User>> = MutableLiveData()
+    val listOfIndivisuals: LiveData<ArrayList<User>>
+        get() = mListOfIndivisuals
 
     private var currentRoom : MutableLiveData<ChatRef> = MutableLiveData()
     val _currentRoom : LiveData<ChatRef>
@@ -46,6 +47,11 @@ class MainActivityViewModel : ViewModel() {
     private var mGroup: MutableLiveData<Group> = MutableLiveData()
     val _mGroup: LiveData<Group>
     get() = mGroup
+
+    private var mGroupRoom:MutableLiveData<String> = MutableLiveData()
+    val _mGroupRoom:LiveData<String>
+    get() = mGroupRoom
+
     init {
         mMessageList.value = ArrayList<Message>()
     }
@@ -70,7 +76,7 @@ class MainActivityViewModel : ViewModel() {
     fun setCurrentRoom(room:ChatRef){
         currentRoom.value = room
     }
-    fun setListOfFriends(list:ArrayList<User>){
+    fun setListOfFriends(list:ArrayList<ChatFrag>){
         _listOfFriends.value = list
         Log.e(TAG,"list of friends called+${list.size} ")
     }
@@ -79,10 +85,15 @@ class MainActivityViewModel : ViewModel() {
         _listOfRequests.value = list
     }
 
+    fun setListOfIndivisuals(list:ArrayList<User>){
+        mListOfIndivisuals.value = list
+    }
     fun setUserValue(user:User){
         _mUser.value = user
     }
-
+    fun setGrpRoomString(grp:String){
+        mGroupRoom.value = grp
+    }
     fun setSSIDValue(ssid:String){
         _mSSId.value = ssid
     }

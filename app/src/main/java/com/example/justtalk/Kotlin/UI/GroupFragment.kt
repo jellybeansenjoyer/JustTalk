@@ -39,7 +39,9 @@ class GroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = SelectListAdapter()
-        adapter.submitList(model.listOfFriends.value!!)
+        model.listOfIndivisuals.observe(activity!!){
+            adapter.submitList(it)
+        }
         mBinding.listOfFriends.apply{
             this.adapter = adapter
             this.layoutManager = LinearLayoutManager(this@GroupFragment.context)
