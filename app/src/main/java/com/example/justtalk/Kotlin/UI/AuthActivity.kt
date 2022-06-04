@@ -38,11 +38,10 @@ class AuthActivity : AppCompatActivity(){
     * LOGIN SHOULD ALWAYS BE THE FIRST */
 
     override fun onBackPressed() {
-        super.onBackPressed()
         val fragment = mBinding.container.getFragment<Fragment>()
         when(fragment){
             is LoginFragment ->   finish()
-            else -> super.onBackPressed()
+            else -> supportFragmentManager.popBackStack()
         }
     }
 
