@@ -127,7 +127,7 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
                         "uploadedSuccessfully",
                         Toast.LENGTH_SHORT
                     ).show()
-                    progress(!isInProgress)
+                    progress(!isComplete)
                     mBinding.commitChanges.isEnabled = true
                 }
 
@@ -142,6 +142,10 @@ class FragmentUserProfile : Fragment(),InterceptProgress {
         cb.launch(intent)
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.e(TAG,"endedd")
+    }
     override fun progress(flag: Boolean) {
         if(flag)
             mBinding.progressBar.visibility = View.VISIBLE

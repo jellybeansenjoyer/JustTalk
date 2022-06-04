@@ -43,6 +43,7 @@ class FindFriendsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e(TAG,"FindFriendsFragment is launched")
         mAuth = Firebase.auth
         mReference  = Firebase.database.reference.child("Users")
         mReqReference = Firebase.database.reference.child("RequestRoom")
@@ -55,6 +56,7 @@ class FindFriendsFragment : Fragment() {
                     mCurrentUser = mAuth.currentUser
                 }
                 1->{
+                    Log.e(TAG,"Executed also")
                     mUser = mViewModel.mUser.value!!
                 }
             }
@@ -100,7 +102,7 @@ class FindFriendsFragment : Fragment() {
             (activity as AuthActivity).apply{
                 model.setUserValue(mUser)
                 transferData()
-//                getUserAndUpdateVM(mCurrentUser.uid,true)
+//                getUserAndUpdateVM(mCurrentUser!!.uid,true)
             }
         }
     }

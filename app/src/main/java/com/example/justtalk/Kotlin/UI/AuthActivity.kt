@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.justtalk.Kotlin.models.User
 import com.example.justtalk.R
 import com.example.justtalk.databinding.ActivityAuthBinding
@@ -18,6 +19,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.collections.HashMap
 import kotlin.reflect.KClass
 
@@ -33,11 +36,13 @@ const val PASS="pass"
 class AuthActivity : AppCompatActivity(){
     /* Get the current fragment and if login then quit activity
     * LOGIN SHOULD ALWAYS BE THE FIRST */
+
     override fun onBackPressed() {
+        super.onBackPressed()
         val fragment = mBinding.container.getFragment<Fragment>()
         when(fragment){
             is LoginFragment ->   finish()
-            else -> supportFragmentManager.popBackStack()
+            else -> super.onBackPressed()
         }
     }
 
@@ -117,6 +122,12 @@ class AuthActivity : AppCompatActivity(){
         //parcel is a User object which actually extends the Serialiable and used in puExtra
         intent.putExtra("parcel",parcel)
         startActivity(intent)
+        supportFragmentManager.fragments.let {
+//            Log.e(TAG,it[0].toString())
+//            Log.e(TAG,it.size.toString())
+              if(it[it.size-1].javaClass.name.equals("com.example.justtalk.Kotlin.UI.SplashFragment"))
+                finish()
+        }
     }
 
     /*Function to Find A record in the database with a given firebaseId and a transfer flag set to
@@ -151,12 +162,14 @@ class AuthActivity : AppCompatActivity(){
         val sharedPref = getSharedPreferences(AUTH_SHARED_PREFERENCE, MODE_PRIVATE)
         val flag = sharedPref.getBoolean(LOGGED_IN,false)
         if(flag){
-            makeTransaction(SplashFragment::class,null,"add")
+//            makeTransaction(SplashFragment::class,null,"add")
+            supportFragmentManager.beginTransaction().add(R.id.container,SplashFragment::class.java,null).addToBackStack(null).commit()
             val email = sharedPref.getString(EMAIL,"err")!!
             val pass = sharedPref.getString(PASS,"err")!!
             Firebase.auth.signInWithEmailAndPassword(email,pass).addOnCompleteListener {
                 if(it.isSuccessful){
                     getUserAndUpdateVM(it.result.user!!.uid,true)
+
                 }else{
                     Toast.makeText(this, "Failure Logging in", Toast.LENGTH_SHORT).show()
                 }

@@ -61,8 +61,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("clr",1)
                 startActivity(intent)
                 mAuthViewModel.reset()
-                finish()
-                Log.e(TAG,"finished")
+                this.finish()
                 return true
             }
             else -> {
@@ -74,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //intialize view model
-        Log.e(TAG,"Called")
+        Log.e(TAG,"came here")
         setStatusBarColor(R.color.marine_green)
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -153,4 +152,15 @@ class MainActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(color)
     }
+
+    override fun onStop() {
+        super.onStop()
+        Log.e(TAG,"The MainActivity is stopped")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e(TAG,"The MainActivity is dead")
+    }
+
 }
