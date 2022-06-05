@@ -99,6 +99,7 @@ class FindFriendsFragment : Fragment() {
         mBinding.continueToMain.setOnClickListener{
             (activity as AuthActivity).apply{
                 model.setUserValue(mUser)
+                finish()
                 transferData()
 //                getUserAndUpdateVM(mCurrentUser.uid,true)
             }

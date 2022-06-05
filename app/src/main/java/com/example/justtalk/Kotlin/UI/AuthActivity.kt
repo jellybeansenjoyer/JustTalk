@@ -117,6 +117,10 @@ class AuthActivity : AppCompatActivity(){
         //parcel is a User object which actually extends the Serialiable and used in puExtra
         intent.putExtra("parcel",parcel)
         startActivity(intent)
+        supportFragmentManager.fragments.let{
+            if(it[it.size-1]::class.equals(SplashFragment::class))
+                finish()
+        }
     }
 
     /*Function to Find A record in the database with a given firebaseId and a transfer flag set to
