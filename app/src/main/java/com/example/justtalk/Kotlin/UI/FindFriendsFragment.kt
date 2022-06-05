@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.justtalk.Kotlin.Adapter.FriendListAddFriendListener
 import com.example.justtalk.Kotlin.Adapter.FriendsListAdapter
@@ -20,6 +21,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.temporal.ValueRange
 
 private const val TAG = "FindFriendsFragment"
@@ -99,6 +102,9 @@ class FindFriendsFragment : Fragment() {
         mBinding.continueToMain.setOnClickListener{
             (activity as AuthActivity).apply{
                 model.setUserValue(mUser)
+                lifecycleScope.launch{
+                    delay(500)
+                }
                 finish()
                 transferData()
 //                getUserAndUpdateVM(mCurrentUser.uid,true)
