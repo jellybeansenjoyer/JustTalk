@@ -34,11 +34,15 @@ class AuthActivity : AppCompatActivity(){
     /* Get the current fragment and if login then quit activity
     * LOGIN SHOULD ALWAYS BE THE FIRST */
     override fun onBackPressed() {
-        val fragment = mBinding.container.getFragment<Fragment>()
-        when(fragment){
-            is LoginFragment ->   finish()
-            else -> supportFragmentManager.popBackStack()
-        }
+//        val fragment = mBinding.container.getFragment<Fragment>()
+//        when(fragment){
+//            is LoginFragment ->   finish()
+//            else -> supportFragmentManager.popBackStack()
+//        }
+        if(supportFragmentManager.fragments.size==1)
+            finish()
+        else
+            super.onBackPressed()
     }
 
     lateinit private var mReference: DatabaseReference
@@ -117,10 +121,7 @@ class AuthActivity : AppCompatActivity(){
         //parcel is a User object which actually extends the Serialiable and used in puExtra
         intent.putExtra("parcel",parcel)
         startActivity(intent)
-        supportFragmentManager.fragments.let{
-            if(it[it.size-1]::class.equals(SplashFragment::class))
-                finish()
-        }
+        finish()
     }
 
     /*Function to Find A record in the database with a given firebaseId and a transfer flag set to

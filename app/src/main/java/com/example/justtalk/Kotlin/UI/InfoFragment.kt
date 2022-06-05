@@ -80,6 +80,7 @@ class InfoFragment() : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_info,container,false)
+        mBinding.createButton.isEnabled = true
         return mBinding.root
     }
 
@@ -88,19 +89,17 @@ class InfoFragment() : Fragment() {
         val auth = Firebase.auth.currentUser!!
         val fbuserId = auth.uid
         mBinding.createButton.setOnClickListener{
+            it.isEnabled = false
             //FindFriendsActivity
+            mBinding.progressBarInfo.visibility = View.VISIBLE
             val name = mBinding.nameFieldEditText.text.toString()
             //non-empty field check
             if(!name.isEmpty()){
                 pushToDatabase(name)
 //                Firebase.auth.signInWithEmailAndPassword(fbuser!!.email!!,password).addOnCompleteListener {
 //                    if (it.isSuccessful){
-                        (activity as AuthActivity).apply {
-                            val bundle = Bundle()
-                            bundle.putInt("FindFriendsId",0)
-                            makeTransaction(FindFriendsFragment::class,bundle,"replace")
-//                            getUserAndUpdateVM(fbuserId,false)
-                        }
+
+                        //                            getUserAndUpdateVM(fbuserId,false)
 //                    }
 //                }
             } else
@@ -139,7 +138,16 @@ class InfoFragment() : Fragment() {
 
         //Pushing the User object to database and the image to Storage Database
         mReference.updateChildren(hashMapOf(Pair<String,Any>(key,mUser)))
-        mStorage.putFile(image!!)
+        mStorage.putFile(image!!).addOnSuccessListener {
+            mBinding.progressBarInfo.visibility = View.INVISIBLE
+            switchFragment()
+        }
     }
-
+    fun switchFragment(){
+        (activity as AuthActivity).apply {
+            val bundle = Bundle()
+            bundle.putInt("FindFriendsId",0)
+            makeTransaction(FindFriendsFragment::class,bundle,"replace")
+        }
+    }
 }
